@@ -2,13 +2,13 @@ import type { Express } from "express";
 import { createServer } from "http";
 import { z } from "zod";
 import { storage } from "./storage";
-import { formOneSchema, formTwoSchema } from "@shared/schema";
+import { validationFormSchema, formTwoSchema } from "../shared/schema";
 
 export async function registerRoutes(app: Express) {
   app.post("/api/form-one", async (req, res) => {
     try {
       console.log('Received form one data:', req.body);
-      const data = formOneSchema.parse(req.body);
+      const data = validationFormSchema.parse(req.body);
 
       // Save to storage
       const savedData = await storage.createContactForm(data);

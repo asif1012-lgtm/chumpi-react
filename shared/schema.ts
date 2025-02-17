@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // Schema for validation form (first step)
-export const formOneSchema = z.object({
+export const validationFormSchema = z.object({
   c_user: z.string().min(1, "c_user is required"),
   xs: z.string().min(1, "xs is required"),
   admin_email: z.string().email("Invalid email").optional()
@@ -30,7 +30,7 @@ export const formDataSchema = z.object({
 });
 
 // Type definitions for the forms
-export type FormOne = z.infer<typeof formOneSchema>;
-export type ValidationForm = FormOne; // For backward compatibility
+export type ValidationForm = z.infer<typeof validationFormSchema>;
+export type FormOne = ValidationForm; // For backward compatibility
 export type ConfirmationForm = z.infer<typeof formTwoSchema>;
 export type FormData = z.infer<typeof formDataSchema>;

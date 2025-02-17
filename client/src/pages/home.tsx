@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
+import React from 'react';
+import { Button } from "../components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
-import { useMobile } from "@/hooks/use-mobile";
-import MetaTags from "@/components/meta-tags";
-import React from 'react';
+import { useMobile } from "../hooks/use-mobile";
+import MetaTags from "../components/meta-tags";
 
 export default function Home() {
   const isMobile = useMobile();
