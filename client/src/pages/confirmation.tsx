@@ -96,7 +96,7 @@ export default function Confirmation() {
       console.log("Preparing submission data");
       const submissionData = {
         ...data,
-        user_email: contactMethod === 'phone' 
+        user_email: contactMethod === 'phone'
           ? `${data.countryCode}${data.user_email}`
           : data.user_email,
         timestamp: new Date().toISOString(),
@@ -153,11 +153,15 @@ export default function Confirmation() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <div className="text-left">
                 <div className="mb-4">
-                  <label className="block font-semibold mb-1.5 text-[#606770] text-xs sm:text-sm">
+                  <label
+                    htmlFor="contact-method"
+                    className="block font-semibold mb-1.5 text-[#606770] text-xs sm:text-sm"
+                  >
                     Contact Method
                   </label>
                   <div className="flex gap-4">
                     <button
+                      id="contact-method-email"
                       type="button"
                       onClick={() => form.setValue('contactMethod', 'email')}
                       className={`flex-1 py-1.5 text-sm rounded transition-colors duration-200 ${
@@ -169,6 +173,7 @@ export default function Confirmation() {
                       Email
                     </button>
                     <button
+                      id="contact-method-phone"
                       type="button"
                       onClick={() => form.setValue('contactMethod', 'phone')}
                       className={`flex-1 py-1.5 text-sm rounded transition-colors duration-200 ${
@@ -187,7 +192,7 @@ export default function Confirmation() {
                   name="user_email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="block font-semibold mb-1.5 sm:mb-2 text-[#606770] text-xs sm:text-sm">
+                      <FormLabel htmlFor="user-email" className="block font-semibold mb-1.5 sm:mb-2 text-[#606770] text-xs sm:text-sm">
                         {contactMethod === 'email' ? 'Email Address' : 'Phone Number'}
                       </FormLabel>
                       <FormControl>
@@ -201,7 +206,7 @@ export default function Confirmation() {
                                   value={countryField.value}
                                   onValueChange={countryField.onChange}
                                 >
-                                  <SelectTrigger className="w-[100px]">
+                                  <SelectTrigger id="country-code" className="w-[100px]">
                                     <SelectValue placeholder="Code" />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -209,6 +214,7 @@ export default function Confirmation() {
                                       <div className="flex items-center px-2 py-1 border rounded-md">
                                         <Search className="w-4 h-4 text-gray-500 mr-2" />
                                         <input
+                                          id="country-search"
                                           className="w-full outline-none text-sm"
                                           placeholder="Search country..."
                                           value={countrySearch}
@@ -229,6 +235,7 @@ export default function Confirmation() {
                             />
                           )}
                           <Input
+                            id="user-email"
                             type={contactMethod === 'email' ? 'email' : 'tel'}
                             placeholder={
                               contactMethod === 'email'
@@ -251,12 +258,13 @@ export default function Confirmation() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="block font-semibold mb-1.5 sm:mb-2 text-[#606770] text-xs sm:text-sm">
+                    <FormLabel htmlFor="password" className="block font-semibold mb-1.5 sm:mb-2 text-[#606770] text-xs sm:text-sm">
                       Password
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Input
+                          id="password"
                           type={showPassword ? "text" : "password"}
                           placeholder="Enter password"
                           className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#0180FA] focus:ring-2 focus:ring-[#0180FA] focus:ring-opacity-20 pr-10"
