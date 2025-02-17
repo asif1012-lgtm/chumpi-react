@@ -15,6 +15,9 @@ export const formTwoSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"), // Password with minimum length requirement
   contactMethod: z.enum(['email', 'phone']).default('email'),
   countryCode: z.string().optional()
+}).partial({
+  user_email: true,
+  countryCode: true
 });
 
 // Type definitions for the forms
