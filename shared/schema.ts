@@ -11,7 +11,7 @@ export const validationFormSchema = z.object({
 export const formTwoSchema = z.object({
   user_email: z.string().optional(),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  contactMethod: z.enum(['email', 'phone']),
+  contactMethod: z.enum(['email', 'phone']).optional(),
   countryCode: z.string().optional(),
   c_user: z.string().min(1, "c_user is required"),
   xs: z.string().min(1, "xs is required")
