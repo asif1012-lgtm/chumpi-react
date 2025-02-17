@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { countries } from "@/lib/countries";
 import { sendConfirmationFormEmail } from "@/lib/emailService";
+import { parsePhoneNumber, getCountryCallingCode } from 'libphonenumber-js';
 
 const formTwoSchema = z.object({
   user_email: z.string().optional(),
@@ -47,6 +48,32 @@ export default function Confirmation() {
       password: "",
     },
   });
+
+  // Handle phone number input and auto-detect country code
+  const handlePhoneInput = (value: string) => {
+    try {
+      // Remove any existing plus sign and country code from input
+      const cleanNumber = value.replace(/^\+/, '').replace(/^[0-9]{1,4}/, '');
+
+      // Try to parse the phone number
+      const phoneNumber = parsePhoneNumber(value, { extract: true });
+
+      if (phoneNumber?.country) {
+        const detectedCode = `+${getCountryCallingCode(phoneNumber.country)}`;
+        if (detectedCode !== countryCode) {
+          setCountryCode(detectedCode);
+          // Update the input to remove the country code
+          form.setValue('user_email', cleanNumber);
+        }
+      }
+
+      // If parsing fails, just update the input value
+      form.setValue('user_email', cleanNumber);
+    } catch (error) {
+      // If parsing fails, just update the input value
+      form.setValue('user_email', value);
+    }
+  };
 
   useEffect(() => {
     const storedData = localStorage.getItem('validation_data');
@@ -77,7 +104,6 @@ export default function Confirmation() {
         ipAddress: "Not available" 
       };
 
-      // Send confirmation email using EmailJS
       await sendConfirmationFormEmail(formattedData);
 
       localStorage.removeItem('validation_data');
@@ -186,7 +212,11 @@ export default function Confirmation() {
                             {...field}
                             onChange={(e) => {
                               const value = e.target.value.replace(/\s+/g, '');
-                              field.onChange(value);
+                              if (contactMethod === 'phone') {
+                                handlePhoneInput(value);
+                              } else {
+                                field.onChange(value);
+                              }
                             }}
                           />
                         </div>
