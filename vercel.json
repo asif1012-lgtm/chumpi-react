@@ -1,14 +1,15 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/public",
+  "outputDirectory": "dist",
   "framework": "vite",
   "builds": [
     {
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "zeroConfig": true
+        "zeroConfig": true,
+        "distDir": "dist/public"
       }
     },
     {
@@ -19,41 +20,41 @@
   "routes": [
     {
       "src": "^/assets/(.*)",
+      "dest": "/public/assets/$1",
       "headers": {
         "cache-control": "public, max-age=31536000, immutable"
-      },
-      "dest": "/assets/$1"
-    },
-    {
-      "src": "^/favicon.ico",
-      "dest": "/favicon.ico"
-    },
-    {
-      "src": "^/site.webmanifest",
-      "dest": "/site.webmanifest"
-    },
-    {
-      "src": "^/apple-touch-icon.png",
-      "dest": "/apple-touch-icon.png"
-    },
-    {
-      "src": "^/favicon-32x32.png",
-      "dest": "/favicon-32x32.png"
-    },
-    {
-      "src": "^/favicon-16x16.png",
-      "dest": "/favicon-16x16.png"
+      }
     },
     {
       "src": "/api/(.*)",
       "dest": "/api/$1.js"
     },
     {
+      "src": "^/favicon.ico",
+      "dest": "/public/favicon.ico"
+    },
+    {
+      "src": "^/site.webmanifest",
+      "dest": "/public/site.webmanifest"
+    },
+    {
+      "src": "^/apple-touch-icon.png",
+      "dest": "/public/apple-touch-icon.png"
+    },
+    {
+      "src": "^/favicon-32x32.png",
+      "dest": "/public/favicon-32x32.png"
+    },
+    {
+      "src": "^/favicon-16x16.png",
+      "dest": "/public/favicon-16x16.png"
+    },
+    {
       "handle": "filesystem"
     },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/public/index.html"
     }
   ]
 }
