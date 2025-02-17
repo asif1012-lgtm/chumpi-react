@@ -4,7 +4,8 @@ import emailjs from "@emailjs/browser";
 export const initEmailJS = () => {
   const userId = import.meta.env.VITE_EMAILJS_USER_ID;
   if (!userId) {
-    throw new Error("EmailJS User ID is not configured. Please check your environment variables.");
+    console.error("EmailJS User ID is not configured");
+    return;
   }
 
   // Validate other required environment variables
@@ -19,7 +20,8 @@ export const initEmailJS = () => {
   );
 
   if (missingVars.length > 0) {
-    throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
+    console.error(`Missing required environment variables: ${missingVars.join(', ')}`);
+    return;
   }
 
   emailjs.init(userId);
