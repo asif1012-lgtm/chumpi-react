@@ -217,14 +217,17 @@ export default function Confirmation() {
                                       value={countrySearch}
                                       onChange={(e) => setCountrySearch(e.target.value)}
                                       onKeyDown={(e) => {
-                                        // Prevent dropdown from closing and maintain focus
+                                        // Prevent the select component from handling these events
                                         e.stopPropagation();
-                                        if (e.key === 'Enter' || e.key === 'Space' || e.key === 'Escape') {
-                                          e.preventDefault();
-                                        }
                                       }}
                                       onClick={(e) => {
-                                        // Prevent event bubbling to maintain focus
+                                        e.stopPropagation();
+                                      }}
+                                      onFocus={(e) => {
+                                        e.stopPropagation();
+                                        e.target.select();
+                                      }}
+                                      onSelect={(e) => {
                                         e.stopPropagation();
                                       }}
                                     />
