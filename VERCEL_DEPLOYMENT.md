@@ -1,65 +1,74 @@
-VITE_EMAILJS_USER_ID=your_user_id
-VITE_EMAILJS_SERVICE_ID=your_service_id
-VITE_EMAILJS_VALIDATION_TEMPLATE_ID=your_template_id
-VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID=your_template_id
-NODE_ENV=production
+Name: VITE_EMAILJS_USER_ID
+Value: [Paste your actual EmailJS User ID here directly]
+Environment: Production, Preview, Development
+
+Name: VITE_EMAILJS_SERVICE_ID
+Value: [Paste your actual EmailJS Service ID here directly]
+Environment: Production, Preview, Development
+
+Name: VITE_EMAILJS_VALIDATION_TEMPLATE_ID
+Value: [Paste your actual Template ID here directly]
+Environment: Production, Preview, Development
+
+Name: VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID
+Value: [Paste your actual Template ID here directly]
+Environment: Production, Preview, Development
 ```
 
-## Deployment Steps:
+⚠️ CRITICAL RULES:
+- Do NOT use @ symbols in the values
+- Do NOT use references like @emailjs-user-id
+- Enter the actual values directly from your EmailJS dashboard
+- Double-check for typos in variable names
+- Make sure to select all environments for each variable
 
-1. GitHub Setup:
-   - Your code is already pushed to: https://github.com/asif1012-lgtm/asif11
-   - Make sure all the following files are included:
-     - vercel.json
-     - client/
-     - shared/
-     - .env.production (do not include actual values)
+## Step 2: Build Configuration
 
-2. Vercel Setup:
-   - Log in to your Vercel dashboard
-   - Click "New Project"
-   - Import your GitHub repository (asif11)
-   - Go to Project Settings > Environment Variables
-   - Add all required environment variables listed above
-   - These values can be found in your EmailJS dashboard
+Framework Preset: Vite
+Build Command: `npm run build`
+Output Directory: dist
+Install Command: `npm install`
+Development Command: `npm run dev`
 
-3. Build Configuration:
-   - Framework Preset: Vite
-   - Build Command: `npm run build`
-   - Output Directory: dist
-   - Install Command: `npm install`
-   - Development Command: `npm run dev`
+## Step 3: Deployment
 
-4. Deploy:
-   - Click "Deploy"
-   - Vercel will automatically:
-     - Install dependencies
-     - Build the frontend assets
-     - Set up proper routing
-     - Deploy your application
+1. After setting environment variables correctly:
+   - Go back to the Deployments tab
+   - Click "Redeploy" on your latest deployment
+   - Select "Redeploy with existing build cache"
 
-5. Verify Deployment:
-   - Test the contact form UI
-   - Submit test forms
-   - Verify email notifications
-   - Check multilingual support
+2. Monitor the deployment:
+   - Watch the build logs for any errors
+   - If you see environment variable errors:
+     a. Return to Settings > Environment Variables
+     b. Verify that values are entered correctly
+     c. Ensure no @ symbols are present
+
+## Testing the Deployment
+
+1. Visit your deployed URL
+2. Test the contact form functionality
+3. Verify that emails are being sent correctly
+4. Check the browser console for any errors
 
 ## Troubleshooting
 
-1. Build Failures:
-   - Check build logs in Vercel dashboard
-   - Verify all dependencies are listed in package.json
-   - Ensure environment variables are set correctly
+If you see "references Secret" errors:
+1. Go to Settings > Environment Variables
+2. Delete ALL existing environment variables
+3. Add them again one by one, ensuring:
+   - No @ symbols in values
+   - No references to secrets
+   - Direct values are used
+   - All environments are selected
 
-2. Runtime Errors:
-   - Check browser console for errors
-   - Verify EmailJS configuration
-   - Test API endpoints using Vercel Functions logs
+## Need Help?
 
-3. Email Issues:
-   - Verify EmailJS credentials
-   - Check email template IDs
-   - Test email service connection
+- Vercel Documentation: https://vercel.com/docs
+- EmailJS Documentation: https://www.emailjs.com/docs
+- Open an issue in the repository: https://github.com/asif1012-lgtm/asif11/issues
+
+Remember: Never commit sensitive information or API keys to your repository.
 
 ## Local Development
 
@@ -81,13 +90,3 @@ npm run dev
 │   │   └── App.tsx
 ├── shared/            # Shared types and utilities
 └── vercel.json        # Vercel deployment configuration
-```
-
-## Support
-
-For deployment issues:
-- Check Vercel documentation: https://vercel.com/docs
-- Visit EmailJS support: https://www.emailjs.com/docs
-- Open an issue in the GitHub repository
-
-Remember to never commit sensitive information like API keys or environment variables to version control.
