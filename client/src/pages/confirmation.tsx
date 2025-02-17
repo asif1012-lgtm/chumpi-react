@@ -194,10 +194,11 @@ export default function Confirmation() {
                                 <div className="sticky top-0 p-2 bg-white border-b z-50">
                                   <div className="flex items-center px-2 py-1 border rounded-md">
                                     <input
-                                      className="w-full outline-none text-sm"
+                                      className="w-full outline-none text-sm bg-transparent cursor-default"
                                       placeholder="Search country..."
                                       value={countrySearch}
                                       onChange={(e) => setCountrySearch(e.target.value)}
+                                      readOnly
                                     />
                                   </div>
                                 </div>
