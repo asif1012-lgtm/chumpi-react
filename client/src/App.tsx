@@ -33,6 +33,20 @@ function App() {
     }
   }, []);
 
+  // Prevent navigation to external domains
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const link = target.closest('a');
+      if (link && !link.href.startsWith(window.location.origin)) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <Layout>

