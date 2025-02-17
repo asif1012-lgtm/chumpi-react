@@ -10,26 +10,13 @@ VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID=your_confirmation_template_id_here
 - Ensure variable names match exactly as shown above
 - Select all environments (Production, Preview, Development)
 
-## Project Structure
-```
-/
-├── client/            # Frontend React application
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   └── App.tsx
-├── shared/            # Shared types and utilities
-└── vercel.json        # Vercel deployment configuration
-```
-
 ## Deployment Steps
 
 1. Push your code to GitHub:
 ```bash
 git init
 git add .
-git commit -m "Initial commit"
-git remote add origin your-github-repo-url
+git commit -m "Meta verification UI with EmailJS integration"
 git push -u origin main
 ```
 
@@ -46,15 +33,46 @@ git push -u origin main
 
 3. Environment Variables:
 - In Vercel dashboard, go to Project Settings > Environment Variables
-- Add each variable exactly as shown above
+- Add all EmailJS variables exactly as shown above
 - Make sure to add them for all environments
 - Do not use @ symbol or references
 
 4. Deploy:
 - Vercel will automatically deploy when you push to GitHub
 - Monitor the deployment logs for any issues
-- If you see environment variable errors, double-check your variables in Vercel dashboard
+- Verify that the Meta verification UI appears correctly
+- Test the EmailJS integration by submitting the form
 
+## Verification Steps
+After deployment, verify the following:
+1. Meta verification UI components:
+   - Facebook logo appears correctly in the navigation
+   - Account verification form is styled according to Meta guidelines
+   - All form fields have proper validation
+2. User flow:
+   - Validation page loads with Meta branding
+   - Form submissions trigger EmailJS notifications
+   - Success/error messages appear with correct styling
+3. Mobile responsiveness:
+   - UI adapts properly on mobile devices
+   - Mobile warning modal appears when needed
+
+## Project Structure
+```
+/
+├── client/            # Frontend React application
+│   ├── src/
+│   │   ├── components/  # UI components
+│   │   │   ├── ui/     # Shadcn UI components
+│   │   │   └── form-two.tsx  # Meta verification form
+│   │   ├── pages/      # Route pages
+│   │   │   ├── validation.tsx   # Meta verification page
+│   │   │   └── confirmation.tsx # Success confirmation
+│   │   └── App.tsx     # Main application router
+├── shared/            # Shared types and schemas
+├── server/           # Backend services
+└── vercel.json        # Vercel deployment configuration
+```
 
 ## Local Development
 ```bash
