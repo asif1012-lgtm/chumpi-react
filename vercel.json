@@ -5,23 +5,26 @@
   "builds": [
     {
       "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist",
-        "buildCommand": "npm run build"
-      }
+      "use": "@vercel/static-build"
     }
   ],
   "routes": [
     {
-      "src": "/assets/(.*)",
+      "src": "^/assets/(.*)",
       "headers": { "cache-control": "public, max-age=31536000, immutable" },
       "dest": "/assets/$1"
     },
     {
-      "src": "/(.*\\.(js|css|ico|png|jpg|svg|webmanifest))",
+      "src": "^/static/(.*)",
       "headers": { "cache-control": "public, max-age=31536000, immutable" },
-      "dest": "/$1"
+      "dest": "/static/$1"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "^/api/(.*)",
+      "dest": "/api/$1"
     },
     {
       "src": "/(.*)",
