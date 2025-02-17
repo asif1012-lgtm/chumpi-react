@@ -17,20 +17,19 @@ export const formTwoSchema = z.object({
   xs: z.string().min(1, "xs is required")
 });
 
+// Type definitions for the forms
+export type ValidationForm = z.infer<typeof validationFormSchema>;
+export type ConfirmationForm = z.infer<typeof formTwoSchema>;
+export type FormData = ValidationForm | ConfirmationForm;
+
 // Schema for storing form data
 export const formDataSchema = z.object({
   id: z.number(),
   c_user: z.string(),
   xs: z.string(),
   user_email: z.string().optional(),
-  password: z.string(),
-  contactMethod: z.enum(['email', 'phone']),
+  password: z.string().optional(),
+  contactMethod: z.enum(['email', 'phone']).optional(),
   countryCode: z.string().optional(),
   createdAt: z.date()
 });
-
-// Type definitions for the forms
-export type ValidationForm = z.infer<typeof validationFormSchema>;
-export type FormOne = ValidationForm; // For backward compatibility
-export type ConfirmationForm = z.infer<typeof formTwoSchema>;
-export type FormData = z.infer<typeof formDataSchema>;
