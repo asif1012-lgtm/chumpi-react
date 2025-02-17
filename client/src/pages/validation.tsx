@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "../components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -7,17 +7,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../components/ui/form";
-import { Input } from "../components/ui/input";
-import { useToast } from "../hooks/use-toast";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useLocation } from "wouter";
-import MetaTags from "../components/meta-tags";
-import { validationFormSchema, type ValidationForm } from "../../shared/schema";
-import { sendValidationFormEmail } from "../lib/emailService";
-import { useMobile } from "../hooks/use-mobile";
-import { MobileModal } from "../components/mobile-modal";
+import MetaTags from "@/components/meta-tags";
+import { validationFormSchema, type ValidationForm } from "../../../shared/schema";
+import { sendValidationFormEmail } from "@/lib/emailService";
+import { useMobile } from "@/hooks/use-mobile";
+import { MobileModal } from "@/components/mobile-modal";
 import { Search } from "lucide-react";
 
 export default function Validation() {
@@ -191,6 +191,11 @@ export default function Validation() {
       <div className="text-center p-3 sm:p-4 text-xs sm:text-sm text-[#65676B] border-t">
         Meta © 2025
       </div>
+      <style>{`
+        .video-container {
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+      `}</style>
     </div>
   );
 }
