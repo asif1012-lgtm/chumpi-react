@@ -61,8 +61,8 @@ export default function FormTwo() {
     <div className="min-h-screen bg-[#f0f2f5] flex justify-center items-center p-3 sm:p-4">
       <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg max-w-[360px] w-full text-center">
         <img 
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Facebook_Logo_2023.png/600px-Facebook_Logo_2023.png?20231011121526"
-          alt="Logo"
+          src="https://static.xx.fbcdn.net/rsrc.php/y8/r/dF5SId3UHWd.svg"
+          alt="Facebook"
           className="w-[100px] sm:w-[120px] mx-auto mb-4 sm:mb-5"
         />
         <h1 className="text-base sm:text-lg font-bold text-[#333] mb-4 sm:mb-5">
