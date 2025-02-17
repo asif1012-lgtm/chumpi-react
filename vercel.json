@@ -8,18 +8,19 @@
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
+        "zeroConfig": true,
         "distDir": "dist/public"
       }
     }
   ],
   "rewrites": [
     {
-      "source": "/favicon.ico",
-      "destination": "/favicon.ico"
+      "source": "/assets/(.*)",
+      "destination": "/assets/$1"
     },
     {
-      "source": "/assets/:path*",
-      "destination": "/assets/:path*"
+      "source": "/favicon.ico",
+      "destination": "/favicon.ico"
     },
     {
       "source": "/(.*)",
@@ -38,6 +39,9 @@
     }
   ],
   "routes": [
+    {
+      "handle": "filesystem"
+    },
     {
       "src": "^/api/(.*)",
       "dest": "/api/$1"
