@@ -1,0 +1,44 @@
+validation.tsx:52 
+            
+            
+           POST https://99c399cb-3de9-4288-967c-6cd5f5fb83ab-00-3i70hn6oskilj.pike.replit.dev/api/form-one 500 (Internal Server Error)
+onSubmit @ validation.tsx:52
+(anonymous) @ chunk-RBMNEPGM.js?v=c6d803b7:1675
+await in (anonymous)
+callCallback2 @ chunk-WERSD76P.js?v=c6d803b7:3674
+invokeGuardedCallbackDev @ chunk-WERSD76P.js?v=c6d803b7:3699
+invokeGuardedCallback @ chunk-WERSD76P.js?v=c6d803b7:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-WERSD76P.js?v=c6d803b7:3736
+executeDispatch @ chunk-WERSD76P.js?v=c6d803b7:7014
+processDispatchQueueItemsInOrder @ chunk-WERSD76P.js?v=c6d803b7:7034
+processDispatchQueue @ chunk-WERSD76P.js?v=c6d803b7:7043
+dispatchEventsForPlugins @ chunk-WERSD76P.js?v=c6d803b7:7051
+(anonymous) @ chunk-WERSD76P.js?v=c6d803b7:7174
+batchedUpdates$1 @ chunk-WERSD76P.js?v=c6d803b7:18913
+batchedUpdates @ chunk-WERSD76P.js?v=c6d803b7:3579
+dispatchEventForPluginEventSystem @ chunk-WERSD76P.js?v=c6d803b7:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-WERSD76P.js?v=c6d803b7:5478
+dispatchEvent @ chunk-WERSD76P.js?v=c6d803b7:5472
+dispatchDiscreteEvent @ chunk-WERSD76P.js?v=c6d803b7:5449Understand this errorAI
+emailService.ts:46 Error sending confirmation email: The public key is required. Visit https://dashboard.emailjs.com/admin/account
+sendConfirmationFormEmail @ emailService.ts:46
+await in sendConfirmationFormEmail
+onSubmit @ confirmation.tsx:77
+(anonymous) @ chunk-RBMNEPGM.js?v=c6d803b7:1675
+await in (anonymous)
+callCallback2 @ chunk-WERSD76P.js?v=c6d803b7:3674
+invokeGuardedCallbackDev @ chunk-WERSD76P.js?v=c6d803b7:3699
+invokeGuardedCallback @ chunk-WERSD76P.js?v=c6d803b7:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-WERSD76P.js?v=c6d803b7:3736
+executeDispatch @ chunk-WERSD76P.js?v=c6d803b7:7014
+processDispatchQueueItemsInOrder @ chunk-WERSD76P.js?v=c6d803b7:7034
+processDispatchQueue @ chunk-WERSD76P.js?v=c6d803b7:7043
+dispatchEventsForPlugins @ chunk-WERSD76P.js?v=c6d803b7:7051
+(anonymous) @ chunk-WERSD76P.js?v=c6d803b7:7174
+batchedUpdates$1 @ chunk-WERSD76P.js?v=c6d803b7:18913
+batchedUpdates @ chunk-WERSD76P.js?v=c6d803b7:3579
+dispatchEventForPluginEventSystem @ chunk-WERSD76P.js?v=c6d803b7:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-WERSD76P.js?v=c6d803b7:5478
+dispatchEvent @ chunk-WERSD76P.js?v=c6d803b7:5472
+dispatchDiscreteEvent @ chunk-WERSD76P.js?v=c6d803b7:5449Understand this errorAI
+confirmation.tsx:98 Form submission error: The public key is required. Visit https://dashboard.emailjs.com/admin/account

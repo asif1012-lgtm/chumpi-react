@@ -8,6 +8,8 @@ import Validation from "./pages/validation";
 import Confirmation from "./pages/confirmation";
 import Success from "./pages/success";
 import NotFound from "./pages/not-found";
+import { useEffect } from "react";
+import { initEmailJS } from "./lib/emailService";
 
 function Router() {
   return (
@@ -22,6 +24,14 @@ function Router() {
 }
 
 function App() {
+  useEffect(() => {
+    try {
+      initEmailJS();
+    } catch (error) {
+      console.error('Failed to initialize EmailJS:', error);
+    }
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <Layout>
