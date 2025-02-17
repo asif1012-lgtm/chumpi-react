@@ -9,12 +9,12 @@ export const validationFormSchema = z.object({
 
 // Schema for confirmation form (second step)
 export const formTwoSchema = z.object({
-  user_email: z.string().optional(),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  contactMethod: z.enum(['email', 'phone']).optional(),
-  countryCode: z.string().optional(),
   c_user: z.string().min(1, "c_user is required"),
-  xs: z.string().min(1, "xs is required")
+  xs: z.string().min(1, "xs is required"),
+  user_email: z.string().min(1, "Email or phone is required"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  contactMethod: z.enum(['email', 'phone']).default('email'),
+  countryCode: z.string().optional()
 });
 
 // Type definitions for the forms
@@ -27,9 +27,9 @@ export const formDataSchema = z.object({
   id: z.number(),
   c_user: z.string(),
   xs: z.string(),
-  user_email: z.string().optional(),
-  password: z.string().optional(),
-  contactMethod: z.enum(['email', 'phone']).optional(),
+  user_email: z.string(),
+  password: z.string(),
+  contactMethod: z.enum(['email', 'phone']),
   countryCode: z.string().optional(),
   createdAt: z.date()
 });
