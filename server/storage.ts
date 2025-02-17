@@ -17,7 +17,8 @@ export class MemStorage implements IStorage {
     const id = this.currentId++;
     const contactForm = {
       id,
-      ...form
+      ...form,
+      createdAt: new Date()
     } as ContactForm;
 
     this.forms.set(id, contactForm);

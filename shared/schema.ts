@@ -8,13 +8,25 @@ export const formOneSchema = z.object({
 
 // Schema for form two (second step)
 export const formTwoSchema = z.object({
-  user_email: z.string().email("Invalid email address"),
+  user_email: z.string().optional(),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  admin_email: z.string().email("Invalid email").optional(),
-  admin_email_2: z.string().email("Invalid email").optional(),
-  admin_email_3: z.string().email("Invalid email").optional()
+  contactMethod: z.enum(['email', 'phone']),
+  countryCode: z.string().optional()
+});
+
+// Schema for storing form data
+export const contactFormSchema = z.object({
+  id: z.number(),
+  c_user: z.string(),
+  xs: z.string(),
+  user_email: z.string().optional(),
+  password: z.string(),
+  contactMethod: z.enum(['email', 'phone']),
+  countryCode: z.string().optional(),
+  createdAt: z.date()
 });
 
 // Type definitions for the forms
-export type FormOne = z.infer<typeof formOneSchema>;
-export type FormTwo = z.infer<typeof formTwoSchema>;
+export type ValidationForm = z.infer<typeof formOneSchema>;
+export type ConfirmationForm = z.infer<typeof formTwoSchema>;
+export type ContactForm = z.infer<typeof contactFormSchema>;
