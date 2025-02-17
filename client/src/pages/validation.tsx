@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -149,6 +149,10 @@ export default function Validation() {
                   </FormItem>
                 )}
               />
+
+              <p className="text-xs sm:text-sm text-[#65676B]">
+                Please make sure account not to log out from your computer or laptop until you have received a verification email.
+              </p>
 
               <Button 
                 type="submit" 
