@@ -14,8 +14,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useLocation } from "wouter";
 import MetaTags from "@/components/meta-tags";
-import { z } from "zod";
-import { Eye, EyeOff, Search } from "lucide-react";
+import { formTwoSchema } from "../../../shared/schema";
+import { sendConfirmationFormEmail } from "@/lib/emailService";
 import {
   Select,
   SelectContent,
@@ -24,17 +24,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { countries } from "@/lib/countries";
-import { sendConfirmationFormEmail } from "@/lib/emailService";
+import { Eye, EyeOff, Search } from "lucide-react";
 import { parsePhoneNumber, getCountryCallingCode } from 'libphonenumber-js';
 
-const formTwoSchema = z.object({
-  user_email: z.string().optional(),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  contactMethod: z.enum(['email', 'phone']),
-  countryCode: z.string().optional()
-});
-
-type FormTwoValues = z.infer<typeof formTwoSchema>;
+type FormTwoValues = {
+  user_email?: string;
+  password: string;
+  contactMethod: 'email' | 'phone';
+  countryCode?: string;
+};
 
 export default function Confirmation() {
   const { toast } = useToast();
