@@ -6,10 +6,11 @@
       "use": "@vercel/node"
     },
     {
-      "src": "package.json",
+      "src": "client/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist/public"
+        "distDir": "dist/public",
+        "buildCommand": "npm run build"
       }
     }
   ],
@@ -17,6 +18,30 @@
     {
       "src": "/api/(.*)",
       "dest": "server/index.ts"
+    },
+    {
+      "src": "^/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
+      "src": "^/favicon\\.ico",
+      "dest": "/favicon.ico"
+    },
+    {
+      "src": "^/apple-touch-icon\\.png",
+      "dest": "/apple-touch-icon.png"
+    },
+    {
+      "src": "^/favicon-32x32\\.png",
+      "dest": "/favicon-32x32.png"
+    },
+    {
+      "src": "^/favicon-16x16\\.png",
+      "dest": "/favicon-16x16.png"
+    },
+    {
+      "src": "^/site\\.webmanifest",
+      "dest": "/site.webmanifest"
     },
     {
       "handle": "filesystem"
