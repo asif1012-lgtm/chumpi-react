@@ -1,6 +1,6 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
-import { setupVite, log } from "./vite";
+import { setupVite, log, serveStatic } from "./vite";
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -37,11 +37,6 @@ app.use((req, res, next) => {
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
-
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
-      }
-
       log(logLine);
     }
   });
@@ -52,36 +47,33 @@ app.use((req, res, next) => {
 (async () => {
   const server = await registerRoutes(app);
 
-  // Error handling middleware with detailed logging
+  // Error handling middleware
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
-
     console.error('Detailed error:', {
       status,
       message,
       stack: err.stack,
       path: _req.path
     });
-
     res.status(status).json({ message });
   });
 
   if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);
   } else {
-    // Enhanced static file serving for production
+    // Serve static files with proper cache headers
     const publicDir = path.resolve(__dirname, 'public');
     console.log('Serving static files from:', publicDir);
 
-    // Serve static files with proper cache headers
     app.use(express.static(publicDir, {
       maxAge: '1y',
       etag: true,
-      index: false // Don't serve directory indexes
+      index: false
     }));
 
-    // SPA fallback
+    // Serve index.html for all routes (SPA fallback)
     app.get('*', (req, res) => {
       console.log('SPA Fallback for:', req.path);
       res.sendFile(path.join(publicDir, 'index.html'));
