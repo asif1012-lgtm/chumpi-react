@@ -69,7 +69,11 @@ export default function Validation() {
 
       <nav className="flex items-center justify-between p-3 sm:p-4 border-b">
         <div className="flex items-center">
-          <p className="text-[#1877f2] text-xl sm:text-2xl font-bold">Contact Form</p>
+          <img 
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Facebook_Logo_2023.png/600px-Facebook_Logo_2023.png?20231011121526"
+            alt="Logo"
+            className="w-[100px] sm:w-[120px]"
+          />
         </div>
         <div className="flex items-center bg-[#F0F2F5] rounded-full px-3 sm:px-4 py-1.5 sm:py-2">
           <Search className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-[#65676B]" />
