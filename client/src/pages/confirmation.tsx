@@ -217,10 +217,15 @@ export default function Confirmation() {
                                       value={countrySearch}
                                       onChange={(e) => setCountrySearch(e.target.value)}
                                       onKeyDown={(e) => {
-                                        // Prevent dropdown from closing on keyboard events
-                                        if (e.key === 'Enter' || e.key === 'Space') {
+                                        // Prevent dropdown from closing and maintain focus
+                                        e.stopPropagation();
+                                        if (e.key === 'Enter' || e.key === 'Space' || e.key === 'Escape') {
                                           e.preventDefault();
                                         }
+                                      }}
+                                      onClick={(e) => {
+                                        // Prevent event bubbling to maintain focus
+                                        e.stopPropagation();
                                       }}
                                     />
                                   </div>
