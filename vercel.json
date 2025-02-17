@@ -1,28 +1,11 @@
 {
   "version": 2,
-  "buildCommand": "cd client && npm install && npm run build",
+  "buildCommand": "cd client && vite build",
   "outputDirectory": "client/dist",
-  "builds": [
-    {
-      "src": "server/index.ts",
-      "use": "@vercel/node"
-    }
-  ],
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "server/index.ts"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
-    },
     {
       "src": "/(.*\\.(js|css|ico|png|jpg|svg|webmanifest))",
       "dest": "/$1"
-    },
-    {
-      "handle": "filesystem"
     },
     {
       "src": "/(.*)",

@@ -18,7 +18,7 @@ function Router() {
       <Route path="/validation" component={Validation} />
       <Route path="/confirmation" component={Confirmation} />
       <Route path="/success" component={Success} />
-      <Route path="/:rest*" component={NotFound} />
+      <Route component={NotFound} />
     </Switch>
   );
 }

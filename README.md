@@ -1,18 +1,3 @@
-# Meta Verified Project
-
-## Overview
-A React-based application with EmailJS integration for form handling.
-
-## Deployment Instructions
-
-### Prerequisites
-- Node.js 20.x or later
-- EmailJS account with configured templates
-
-### Environment Variables
-The following environment variables must be set in your Vercel project settings:
-
-```env
 VITE_EMAILJS_USER_ID=
 VITE_EMAILJS_SERVICE_ID=
 VITE_EMAILJS_VALIDATION_TEMPLATE_ID=
@@ -30,7 +15,7 @@ SESSION_SECRET=
    - Select the repository
 
 2. Configure the project:
-   - Framework Preset: Other
+   - Framework Preset: Vite
    - Build Command: `npm run build`
    - Output Directory: dist
    - Install Command: `npm install`
@@ -38,10 +23,20 @@ SESSION_SECRET=
 3. Add Environment Variables:
    - In your Vercel project settings, add all required environment variables
    - Make sure to add all EmailJS-related variables with the VITE_ prefix
+   - Get your EmailJS credentials from your EmailJS dashboard
+   - Set NODE_ENV to "production"
 
 4. Deploy:
    - Vercel will automatically deploy your application
    - Any future pushes to the main branch will trigger automatic deployments
+   - Make sure all routes (/, /validation, /confirmation, /success) are working
+
+### Troubleshooting Deployment
+If you encounter 404 errors:
+1. Verify all environment variables are set correctly in Vercel
+2. Ensure the build command executes successfully
+3. Clear the Vercel project cache and redeploy if needed
+4. Check that all routes are properly configured in vercel.json
 
 ### Local Development
 1. Install dependencies:
@@ -54,7 +49,3 @@ SESSION_SECRET=
 3. Start the development server:
    ```bash
    npm run dev
-   ```
-
-## Support
-For any issues with the deployment, please refer to the Vercel documentation or contact support.
