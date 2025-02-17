@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "server/index.ts",
+      "src": "api/**/*.ts",
       "use": "@vercel/node"
     },
     {
@@ -27,14 +27,19 @@
     },
     {
       "src": "/api/(.*)",
-      "dest": "server/index.ts"
+      "dest": "/api/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "dist/public/index.html"
+      "headers": { "cache-control": "s-maxage=1, stale-while-revalidate" },
+      "dest": "/index.html"
     }
   ],
   "env": {
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "VITE_EMAILJS_USER_ID": "@emailjs-user-id",
+    "VITE_EMAILJS_SERVICE_ID": "@emailjs-service-id",
+    "VITE_EMAILJS_VALIDATION_TEMPLATE_ID": "@emailjs-validation-template-id",
+    "VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID": "@emailjs-confirmation-template-id"
   }
 }
