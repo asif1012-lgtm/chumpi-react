@@ -6,11 +6,11 @@
       "use": "@vercel/node"
     },
     {
-      "src": "client/package.json",
+      "src": "client/**",
       "use": "@vercel/static-build",
       "config": {
         "distDir": "dist/public",
-        "buildCommand": "npm run build"
+        "buildCommand": "cd client && npm run build"
       }
     }
   ],
@@ -42,9 +42,6 @@
     {
       "src": "^/site\\.webmanifest",
       "dest": "/site.webmanifest"
-    },
-    {
-      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
