@@ -1,36 +1,15 @@
+// This file is deprecated. Please use client/src/App.tsx instead.
+// This file will be removed in a future update.
+
+import { useEffect } from "react";
 import { Switch, Route } from "wouter";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "@/lib/queryClient";
-import { Toaster } from "@/components/ui/toaster";
-import Layout from "@/components/layout";
-import Home from "@/pages/home";
-import Validation from "@/pages/validation";
-import Confirmation from "@/pages/confirmation";
-import Success from "@/pages/success";
-import NotFound from "@/pages/not-found";
 import React from 'react';
 
-function Router() {
-  return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/validation" component={Validation} />
-      <Route path="/confirmation" component={Confirmation} />
-      <Route path="/success" component={Success} />
-      <Route component={NotFound} />
-    </Switch>
-  );
-}
+// Redirect to the new App location
+export default function App() {
+  useEffect(() => {
+    console.warn('Using deprecated App.tsx. Please update your imports to use client/src/App.tsx');
+  }, []);
 
-function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <Layout>
-        <Router />
-      </Layout>
-      <Toaster />
-    </QueryClientProvider>
-  );
+  return null;
 }
-
-export default App;

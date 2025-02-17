@@ -10,6 +10,7 @@ import Success from "./pages/success";
 import NotFound from "./pages/not-found";
 import { useEffect } from "react";
 import { initEmailJS } from "./lib/emailService";
+import React from 'react';
 
 function Router() {
   return (
