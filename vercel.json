@@ -20,6 +20,10 @@
     }
   ],
   "env": {
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "VITE_EMAILJS_USER_ID": "@emailjs_user_id",
+    "VITE_EMAILJS_SERVICE_ID": "@emailjs_service_id",
+    "VITE_EMAILJS_VALIDATION_TEMPLATE_ID": "@emailjs_validation_template_id",
+    "VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID": "@emailjs_confirmation_template_id"
   }
 }
