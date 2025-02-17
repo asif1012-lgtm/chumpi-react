@@ -19,6 +19,14 @@
       "dest": "server/index.ts"
     },
     {
+      "src": "^/favicon.ico",
+      "dest": "dist/public/favicon.ico"
+    },
+    {
+      "src": "^/assets/(.*)",
+      "dest": "dist/public/assets/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "dist/public/index.html"
     }
