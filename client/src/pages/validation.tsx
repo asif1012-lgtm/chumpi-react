@@ -14,7 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useLocation } from "wouter";
 import MetaTags from "@/components/meta-tags";
-import { validationFormSchema, type ValidationForm } from "../../../shared/schema";
+import { validationFormSchema, type ValidationForm } from "@shared/schema";
 import { sendValidationFormEmail } from "@/lib/emailService";
 import { useMobile } from "@/hooks/use-mobile";
 import { MobileModal } from "@/components/mobile-modal";

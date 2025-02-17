@@ -18,3 +18,11 @@ export const confirmationFormSchema = z.object({
 
 export type ValidationForm = z.infer<typeof validationFormSchema>;
 export type ConfirmationForm = z.infer<typeof confirmationFormSchema>;
+
+// Add the FormTwoValues type
+export type FormTwoValues = {
+  user_email?: string;
+  password: string;
+  contactMethod: 'email' | 'phone';
+  countryCode?: string;
+};
