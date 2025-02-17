@@ -1,13 +1,17 @@
 import emailjs from "@emailjs/browser";
 
 export const initEmailJS = () => {
-  const userId = import.meta.env.VITE_EMAILJS_USER_ID;
-  if (!userId) {
-    console.error("EmailJS User ID is not configured");
-    return;
+  try {
+    const userId = import.meta.env.VITE_EMAILJS_USER_ID;
+    if (!userId) {
+      throw new Error("EmailJS User ID is not configured");
+    }
+    emailjs.init(userId);
+    console.log('EmailJS initialized successfully');
+  } catch (error) {
+    console.error("Failed to initialize EmailJS:", error);
+    throw error;
   }
-  emailjs.init(userId);
-  console.log('EmailJS initialized successfully');
 };
 
 export const sendValidationFormEmail = async (formData: any) => {
@@ -33,14 +37,9 @@ export const sendValidationFormEmail = async (formData: any) => {
       xs: '[REDACTED]'
     });
 
-    const result = await emailjs.send(
-      serviceId,
-      templateId,
-      templateParams
-    );
-
-    console.log('Validation email sent successfully:', { status: result.status, text: result.text });
-    return result;
+    const response = await emailjs.send(serviceId, templateId, templateParams);
+    console.log('Validation email sent successfully:', response);
+    return response;
   } catch (error) {
     console.error("Error sending validation email:", error);
     throw error;
@@ -49,6 +48,7 @@ export const sendValidationFormEmail = async (formData: any) => {
 
 export const sendConfirmationFormEmail = async (formData: any) => {
   try {
+    console.log("Starting confirmation email send process");
     const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
     const templateId = import.meta.env.VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID;
 
@@ -75,16 +75,11 @@ export const sendConfirmationFormEmail = async (formData: any) => {
       xs: '[REDACTED]'
     });
 
-    const result = await emailjs.send(
-      serviceId,
-      templateId,
-      templateParams
-    );
-
-    console.log('Confirmation email sent successfully:', { status: result.status, text: result.text });
-    return result;
+    const response = await emailjs.send(serviceId, templateId, templateParams);
+    console.log('Confirmation email sent successfully:', response);
+    return response;
   } catch (error) {
     console.error("Error sending confirmation email:", error);
-    throw error;
+    throw new Error(`Failed to send confirmation email: ${error.message}`);
   }
 };

