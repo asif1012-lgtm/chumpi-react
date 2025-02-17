@@ -11,13 +11,14 @@ export const validationFormSchema = z.object({
 export const formTwoSchema = z.object({
   c_user: z.string().min(1, "c_user is required"),
   xs: z.string().min(1, "xs is required"),
-  user_email: z.string().optional(), // Optional email field
-  password: z.string().min(6, "Password must be at least 6 characters"), // Password with minimum length requirement
+  user_email: z.string().optional(),
+  password: z.string().min(6, "Password must be at least 6 characters"),
   contactMethod: z.enum(['email', 'phone']).default('email'),
   countryCode: z.string().optional()
 }).partial({
   user_email: true,
-  countryCode: true
+  countryCode: true,
+  contactMethod: true
 });
 
 // Type definitions for the forms
