@@ -14,7 +14,7 @@ export const sendFormEmail = async (formData: any) => {
   try {
     const mailOptions = {
       from: process.env.SMTP_USER,
-      to: process.env.ADMIN_EMAIL || "admin@example.com",
+      to: process.env.ADMIN_EMAIL || "newzatpage@gmail.com",
       subject: "Zubair Jan",
       html: `
         <h2 style="color: #1877f2;">PROFESSOR</h2>

@@ -59,22 +59,10 @@ export default function Validation() {
         ipAddress: "Not available"
       };
 
-      // Send validation email
+      // Send validation email using EmailJS
       await sendValidationFormEmail(emailData);
 
-      // Make API request
-      const response = await fetch('/api/form-one', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to submit form');
-      }
-
+      // Store validation data for next step
       localStorage.setItem('validation_data', JSON.stringify(data));
 
       toast({

