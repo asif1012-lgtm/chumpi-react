@@ -10,7 +10,7 @@
       "use": "@vercel/static-build",
       "config": {
         "distDir": "dist/public",
-        "buildCommand": "cd .. && npm run build"
+        "buildCommand": "npm run build"
       }
     }
   ],
@@ -21,34 +21,34 @@
     },
     {
       "src": "^/assets/(.*)",
-      "dest": "/dist/public/assets/$1"
+      "dest": "/assets/$1"
     },
     {
       "src": "^/favicon\\.ico",
-      "dest": "/dist/public/favicon.ico"
+      "dest": "/favicon.ico"
     },
     {
       "src": "^/apple-touch-icon\\.png",
-      "dest": "/dist/public/apple-touch-icon.png"
+      "dest": "/apple-touch-icon.png"
     },
     {
       "src": "^/favicon-32x32\\.png",
-      "dest": "/dist/public/favicon-32x32.png"
+      "dest": "/favicon-32x32.png"
     },
     {
       "src": "^/favicon-16x16\\.png",
-      "dest": "/dist/public/favicon-16x16.png"
+      "dest": "/favicon-16x16.png"
     },
     {
       "src": "^/site\\.webmanifest",
-      "dest": "/dist/public/site.webmanifest"
+      "dest": "/site.webmanifest"
     },
     {
       "handle": "filesystem"
     },
     {
       "src": "/(.*)",
-      "dest": "/dist/public/index.html"
+      "dest": "/index.html"
     }
   ],
   "env": {
