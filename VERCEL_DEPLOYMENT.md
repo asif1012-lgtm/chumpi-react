@@ -8,36 +8,65 @@ NODE_ENV=production
 ## Deployment Steps:
 
 1. GitHub Setup:
-   - Push your code to a GitHub repository.
+   - Your code is already pushed to: https://github.com/asif1012-lgtm/asif11
    - Make sure all the following files are included:
      - vercel.json
-     - api/contact-form.ts
-     - api/vercel.ts
+     - client/
+     - shared/
      - .env.production (do not include actual values)
 
 2. Vercel Setup:
-   - Connect your GitHub repository to Vercel.
-   - Go to Project Settings > Environment Variables.
-   - Add all required environment variables listed above.
-   - These values can be found in your EmailJS dashboard.
+   - Log in to your Vercel dashboard
+   - Click "New Project"
+   - Import your GitHub repository (asif11)
+   - Go to Project Settings > Environment Variables
+   - Add all required environment variables listed above
+   - These values can be found in your EmailJS dashboard
 
-3. Deploy:
-   - Vercel will automatically deploy your application.
-   - The build process will:
-     - Build the frontend assets using Vite.
-     - Deploy serverless API functions.
-     - Set up proper routing.
+3. Build Configuration:
+   - Framework Preset: Vite
+   - Build Command: `npm run build`
+   - Output Directory: dist
+   - Install Command: `npm install`
+   - Development Command: `npm run dev`
 
-4. Verify Deployment:
-   - Check that the contact form UI is working.
-   - Test form submissions.
-   - Verify email notifications are being sent.
+4. Deploy:
+   - Click "Deploy"
+   - Vercel will automatically:
+     - Install dependencies
+     - Build the frontend assets
+     - Set up proper routing
+     - Deploy your application
 
-## Development
+5. Verify Deployment:
+   - Test the contact form UI
+   - Submit test forms
+   - Verify email notifications
+   - Check multilingual support
+
+## Troubleshooting
+
+1. Build Failures:
+   - Check build logs in Vercel dashboard
+   - Verify all dependencies are listed in package.json
+   - Ensure environment variables are set correctly
+
+2. Runtime Errors:
+   - Check browser console for errors
+   - Verify EmailJS configuration
+   - Test API endpoints using Vercel Functions logs
+
+3. Email Issues:
+   - Verify EmailJS credentials
+   - Check email template IDs
+   - Test email service connection
+
+## Local Development
 
 To run the project locally:
 
 ```bash
+npm install
 npm run dev
 ```
 
@@ -45,17 +74,20 @@ npm run dev
 
 ```
 /
-├── api/                # Serverless API functions
-│   └── contact-form.ts # Form submission endpoint
 ├── client/            # Frontend React application
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   └── App.tsx
 ├── shared/            # Shared types and utilities
-└── vercel.json        # Deployment configuration
+└── vercel.json        # Vercel deployment configuration
 ```
 
-## Build Output Structure:
+## Support
 
-```
-dist/
-  ├── public/     # Static assets served by Vercel
-  │   ├── assets/
-  │   └── index.html
+For deployment issues:
+- Check Vercel documentation: https://vercel.com/docs
+- Visit EmailJS support: https://www.emailjs.com/docs
+- Open an issue in the GitHub repository
+
+Remember to never commit sensitive information like API keys or environment variables to version control.

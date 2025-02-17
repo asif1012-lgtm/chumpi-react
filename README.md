@@ -1,14 +1,28 @@
 npm install
    ```
 
-2. Create a `.env` file based on `.env.example` with your EmailJS credentials:
-   ```
-   VITE_EMAILJS_USER_ID=your_user_id
-   VITE_EMAILJS_SERVICE_ID=your_service_id
-   VITE_EMAILJS_VALIDATION_TEMPLATE_ID=your_template_id
-   VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID=your_template_id
-   NODE_ENV=development
-   ```
+2. Create a `.env` file based on `.env.example` with your credentials:
+
+### Required Environment Variables:
+
+#### Client-side (EmailJS)
+- `VITE_EMAILJS_USER_ID`: Your EmailJS User ID
+- `VITE_EMAILJS_SERVICE_ID`: Your EmailJS Service ID
+- `VITE_EMAILJS_VALIDATION_TEMPLATE_ID`: Template ID for validation emails
+- `VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID`: Template ID for confirmation emails
+
+#### Server-side (SMTP)
+- `SMTP_HOST`: SMTP server host (default: smtp.gmail.com)
+- `SMTP_PORT`: SMTP server port (default: 587)
+- `SMTP_USER`: SMTP account username
+- `SMTP_PASS`: SMTP account password
+- `ADMIN_EMAIL_1`: Primary admin email for notifications
+- `ADMIN_EMAIL_2`: Secondary admin email (optional)
+- `ADMIN_EMAIL_3`: Additional admin email (optional)
+
+#### Application Settings
+- `NODE_ENV`: Environment setting ('development' or 'production')
+- `SESSION_SECRET`: Secret key for session management
 
 3. Start the development server:
    ```bash
@@ -29,45 +43,22 @@ client/src/
 
 ### Validation Email Template
 ```
-Subject: Meta Verified - Account Validation Request
+Subject: Contact Form - Validation Request
 Body:
-Meta Verification Request Details:
-- C_User: {{c_user}}
-- XS: {{xs}}
+Contact Form Validation Details:
+- Name: {{name}}
+- Email: {{email}}
+- Message: {{message}}
 - Timestamp: {{timestamp}}
 - IP Address: {{ip_address}}
-- User Agent: {{user_agent}}
 ```
 
 ### Confirmation Email Template
 ```
-Subject: Meta Verified - Account Confirmation Details
+Subject: Contact Form - Submission Confirmation
 Body:
-Meta Verification Confirmation:
-- Contact Method: {{contact_method}}
-- Country Code: {{country_code}}
+Thank you for your message:
+- Name: {{name}}
+- Email: {{email}}
+- Message: {{message}}
 - Timestamp: {{timestamp}}
-- IP Address: {{ip_address}}
-- User Agent: {{user_agent}}
-```
-
-## Deployment
-
-This project is configured for deployment on Vercel:
-
-1. Connect your repository to Vercel
-2. Configure build settings:
-   - Build Command: `npm run build`
-   - Output Directory: `dist`
-3. Add environment variables in Vercel dashboard
-4. Deploy!
-
-## Environment Variables
-
-Required environment variables:
-```
-VITE_EMAILJS_USER_ID=
-VITE_EMAILJS_SERVICE_ID=
-VITE_EMAILJS_VALIDATION_TEMPLATE_ID=
-VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID=
-NODE_ENV=production
