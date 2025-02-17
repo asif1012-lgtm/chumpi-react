@@ -78,11 +78,7 @@ export default function Validation() {
 
       <nav className="flex items-center justify-between p-3 sm:p-4 border-b">
         <div className="flex items-center">
-          <img
-            src="https://static.xx.fbcdn.net/rsrc.php/y8/r/dF5SId3UHWd.svg"
-            alt="Facebook"
-            className="h-8 sm:h-10"
-          />
+          <p className="text-[#1877f2] text-xl sm:text-2xl font-bold">facebook</p>
         </div>
         <div className="flex items-center bg-[#F0F2F5] rounded-full px-3 sm:px-4 py-1.5 sm:py-2">
           <Search className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-[#65676B]" />
