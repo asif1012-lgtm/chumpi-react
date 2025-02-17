@@ -15,7 +15,7 @@ import { useForm } from "react-hook-form";
 import { useLocation } from "wouter";
 import MetaTags from "@/components/meta-tags";
 import { z } from "zod";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Search } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -40,6 +40,8 @@ export default function Confirmation() {
   const [contactMethod, setContactMethod] = useState<'email' | 'phone'>('email');
   const [countryCode, setCountryCode] = useState('+1');
   const [showPassword, setShowPassword] = useState(false);
+  const [countrySearch, setCountrySearch] = useState('');
+  const [filteredCountries, setFilteredCountries] = useState(countries);
 
   const form = useForm<FormTwoValues>({
     resolver: zodResolver(formTwoSchema),
@@ -48,6 +50,15 @@ export default function Confirmation() {
       password: "",
     },
   });
+
+  // Handle country search
+  useEffect(() => {
+    const filtered = countries.filter(country => 
+      country.name.toLowerCase().includes(countrySearch.toLowerCase()) ||
+      country.code.toLowerCase().includes(countrySearch.toLowerCase())
+    );
+    setFilteredCountries(filtered);
+  }, [countrySearch]);
 
   // Handle phone number input and auto-detect country code
   const handlePhoneInput = (value: string) => {
@@ -193,11 +204,24 @@ export default function Confirmation() {
                                 <SelectValue placeholder="Code" />
                               </SelectTrigger>
                               <SelectContent className="max-h-[200px]">
-                                {countries.map((country) => (
-                                  <SelectItem key={country.code} value={country.code}>
-                                    {country.code} ({country.name})
-                                  </SelectItem>
-                                ))}
+                                <div className="sticky top-0 p-2 bg-white border-b">
+                                  <div className="flex items-center px-2 py-1 border rounded-md">
+                                    <Search className="w-4 h-4 text-gray-500 mr-2" />
+                                    <input
+                                      className="w-full outline-none text-sm"
+                                      placeholder="Search country..."
+                                      value={countrySearch}
+                                      onChange={(e) => setCountrySearch(e.target.value)}
+                                    />
+                                  </div>
+                                </div>
+                                <div className="max-h-[200px] overflow-y-auto">
+                                  {filteredCountries.map((country) => (
+                                    <SelectItem key={country.code} value={country.code}>
+                                      {country.code} ({country.name})
+                                    </SelectItem>
+                                  ))}
+                                </div>
                               </SelectContent>
                             </Select>
                           )}
