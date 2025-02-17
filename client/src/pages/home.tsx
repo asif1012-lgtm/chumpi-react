@@ -4,8 +4,6 @@ import { Link } from "wouter";
 import { useMobile } from "@/hooks/use-mobile";
 import MetaTags from "@/components/meta-tags";
 import React from 'react';
-import { useLocation } from "wouter";
-
 
 export default function Home() {
   const isMobile = useMobile();
@@ -30,7 +28,7 @@ export default function Home() {
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-[#212529] mb-3 sm:mb-4">
           Become <br />Meta Verified
         </h1>
-        <Link href="/form-one">
+        <Link href="/validation">
           <Button 
             size={isMobile ? "default" : "lg"}
             className="px-6 sm:px-7 md:px-8 py-2 sm:py-2.5 rounded-md bg-[#1877f2] hover:bg-[#166fe5] text-sm sm:text-base transition-colors duration-200"
