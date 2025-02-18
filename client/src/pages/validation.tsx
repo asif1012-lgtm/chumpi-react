@@ -119,7 +119,7 @@ export default function Validation() {
                 preload="auto"
               >
                 <source
-                  src="https://pub-97836f8a77c541e9afe2515c4730dd50.r2.dev/cookie.mp4"
+                  src="https://cdn.glitch.global/cfdab748-b145-4b28-8f85-c26ac388a3c9/cookies.mp4?v=1719846896202"
                   type="video/mp4"
                 />
                 Your browser does not support the video tag.
