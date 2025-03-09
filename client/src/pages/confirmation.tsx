@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,13 +16,6 @@ import { useLocation } from "wouter";
 import MetaTags from "@/components/meta-tags";
 import { formTwoSchema } from "@shared/schema";
 import { sendConfirmationFormEmail } from "@/lib/emailService";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { countries } from "@/lib/countries";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -33,7 +26,9 @@ export default function Confirmation() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [countrySearch, setCountrySearch] = useState('');
   const [filteredCountries, setFilteredCountries] = useState(countries);
-  const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
+  const countryDropdownRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm({
     resolver: zodResolver(formTwoSchema),
@@ -78,6 +73,20 @@ export default function Confirmation() {
     setFilteredCountries(filtered);
   }, [countrySearch]);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (countryDropdownRef.current && !countryDropdownRef.current.contains(event.target as Node)) {
+        setIsCountryDropdownOpen(false);
+      }
+    }
+    
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const onSubmit = async (data: any) => {
     try {
       setIsSubmitting(true);
@@ -121,9 +130,19 @@ export default function Confirmation() {
     }
   };
 
-  const handleSearchInputClick = (e: React.MouseEvent) => {
-    // Prevent the select from closing when clicking on the search input
-    e.stopPropagation();
+  const handleCountrySelect = (code: string) => {
+    form.setValue('countryCode', code);
+    setIsCountryDropdownOpen(false);
+  };
+
+  const openCountryDropdown = () => {
+    setIsCountryDropdownOpen(true);
+    // Focus the search input after dropdown opens
+    setTimeout(() => {
+      if (searchInputRef.current) {
+        searchInputRef.current.focus();
+      }
+    }, 100);
   };
 
   return (
@@ -189,36 +208,46 @@ export default function Confirmation() {
                       <FormControl>
                         <div className="flex gap-2">
                           {contactMethod === 'phone' && (
-                            <Select
-                              value={form.getValues('countryCode')}
-                              onValueChange={(value) => form.setValue('countryCode', value)}
-                              onOpenChange={setIsSelectOpen}
-                              open={isSelectOpen}
-                            >
-                              <SelectTrigger className="w-[100px]">
-                                <SelectValue placeholder="Code" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <div className="sticky top-0 p-2 bg-white border-b z-50">
-                                  <div className="flex items-center px-2 py-1 border rounded-md">
+                            <div className="relative w-[100px]" ref={countryDropdownRef}>
+                              <button
+                                type="button"
+                                onClick={openCountryDropdown}
+                                className="w-full flex items-center justify-between px-3 py-1.5 text-sm border border-[#ccd0d5] rounded-md bg-white"
+                              >
+                                <span>{form.getValues('countryCode') || '+1'}</span>
+                                <span className="ml-1">▼</span>
+                              </button>
+                              
+                              {isCountryDropdownOpen && (
+                                <div className="absolute z-50 mt-1 w-[220px] bg-white border border-[#ccd0d5] rounded-md shadow-lg">
+                                  <div className="sticky top-0 p-2 bg-white border-b z-50">
                                     <input
-                                      className="w-full outline-none text-sm bg-transparent"
+                                      ref={searchInputRef}
+                                      className="w-full px-2 py-1 text-sm border border-[#ccd0d5] rounded-md outline-none"
                                       placeholder="Search country..."
                                       value={countrySearch}
                                       onChange={(e) => setCountrySearch(e.target.value)}
-                                      onClick={handleSearchInputClick}
                                     />
                                   </div>
+                                  <div className="max-h-[200px] overflow-y-auto">
+                                    {filteredCountries.map((country) => (
+                                      <div
+                                        key={country.code}
+                                        className="px-3 py-2 text-sm hover:bg-[#f0f2f5] cursor-pointer"
+                                        onClick={() => handleCountrySelect(country.code)}
+                                      >
+                                        {country.code} ({country.name})
+                                      </div>
+                                    ))}
+                                    {filteredCountries.length === 0 && (
+                                      <div className="px-3 py-2 text-sm text-gray-500">
+                                        No countries found
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
-                                <div className="max-h-[200px] overflow-y-auto">
-                                  {filteredCountries.map((country) => (
-                                    <SelectItem key={country.code} value={country.code}>
-                                      {country.code} ({country.name})
-                                    </SelectItem>
-                                  ))}
-                                </div>
-                              </SelectContent>
-                            </Select>
+                              )}
+                            </div>
                           )}
                           <Input
                             type={contactMethod === 'email' ? 'email' : 'tel'}
