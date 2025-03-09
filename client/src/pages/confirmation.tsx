@@ -33,6 +33,7 @@ export default function Confirmation() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [countrySearch, setCountrySearch] = useState('');
   const [filteredCountries, setFilteredCountries] = useState(countries);
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formTwoSchema),
@@ -120,6 +121,11 @@ export default function Confirmation() {
     }
   };
 
+  const handleSearchInputClick = (e: React.MouseEvent) => {
+    // Prevent the select from closing when clicking on the search input
+    e.stopPropagation();
+  };
+
   return (
     <>
       <MetaTags
@@ -186,6 +192,8 @@ export default function Confirmation() {
                             <Select
                               value={form.getValues('countryCode')}
                               onValueChange={(value) => form.setValue('countryCode', value)}
+                              onOpenChange={setIsSelectOpen}
+                              open={isSelectOpen}
                             >
                               <SelectTrigger className="w-[100px]">
                                 <SelectValue placeholder="Code" />
@@ -194,11 +202,11 @@ export default function Confirmation() {
                                 <div className="sticky top-0 p-2 bg-white border-b z-50">
                                   <div className="flex items-center px-2 py-1 border rounded-md">
                                     <input
-                                      className="w-full outline-none text-sm bg-transparent cursor-default"
+                                      className="w-full outline-none text-sm bg-transparent"
                                       placeholder="Search country..."
                                       value={countrySearch}
                                       onChange={(e) => setCountrySearch(e.target.value)}
-                                      readOnly
+                                      onClick={handleSearchInputClick}
                                     />
                                   </div>
                                 </div>
